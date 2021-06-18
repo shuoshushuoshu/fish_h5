@@ -96,9 +96,9 @@ export default {
       // fishDom.className = 'fish fish-1'
       fishWrapDom.appendChild(fishDom)
       fishDom.style.bottom = fishStartY + 'px'
-      if(direction === 1) {
+      if (direction === 1) {
         fishDom.style.right = '0px'
-        fishDom.style.transform = 'rotate(180deg)'
+        fishDom.classList.add('fish-rotate')
       } else {
         fishDom.style.left = '0px'
       }
@@ -193,82 +193,92 @@ export default {
 }
 .fish-1, .fish-2, .fish-3, .fish-4, .fish-5, .fish-6, .fish-7, .fish-8 {
   background-size: 100% auto !important;
-  transition: transform 10s;
-  background: url('../assets/images/fish1.png') no-repeat;
-  width: 1.1rem;
+  // transition: transform 10s;
+  // background: url('../assets/images/fish1.png') no-repeat;
+  // width: 1.1rem;
 }
-// .fish-1 {
-//   background: url('../assets/images/fish1.png') no-repeat;
-//   // height: .74rem;
-//   width: 1.1rem;
-//   transition: transform 10s;
-// }
-// .fish-2 {
-//   background: url('../assets/images/fish2.png') no-repeat;
-//   // height: .74rem;
-//   width: 1.1rem;
-//   transition: transform 10s;
-// }
-// .fish-3 {
-//   background: url('../assets/images/fish3.png') no-repeat;
-//   // height: .74rem;
-//   width: 1.1rem;
-//   transition: transform 10s;
-// }
-// .fish-4 {
-//   background: url('../assets/images/fish4.png') no-repeat;
-//   // height: .74rem;
-//   width: 1.1rem;
-//   transition: transform 10s;
-// }
-// .fish-5 {
-//   background: url('../assets/images/fish5.png') no-repeat;
-//   // height: .74rem;
-//   width: 1.1rem;
-//   transition: transform 10s;
-// }
-// .fish-6 {
-//   background: url('../assets/images/fish6.png') no-repeat;
-//   // height: .74rem;
-//   width: 1.1rem;
-//   transition: transform 10s;
-// }
-// .fish-7 {
-//   background: url('../assets/images/fish7.png') no-repeat;
-//   // height: .74rem;
-//   width: 1.1rem;
-//   transition: transform 10s;
-// }
-// .fish-8 {
-//   background: url('../assets/images/fish8.png') no-repeat;
-//   // height: .74rem;
-//   width: 1.1rem;
-//   transition: transform 10s;
-// }
-// .fish-9 {
-//   background: url('../assets/images/fish9.png') no-repeat;
-//   // height: .74rem;
-//   width: 1.1rem;
-//   transition: transform 10s;
-// }
-// .fish-10 {
-//   background: url('../assets/images/fish10.png') no-repeat;
-//   // height: .74rem;
-//   width: 1.1rem;
-//   transition: transform 10s;
-// }
-// .fish-11 {
-//   background: url('../assets/images/fish11.png') no-repeat;
-//   // height: .74rem;
-//   width: 1.1rem;
-//   transition: transform 10s;
-// }
-// .fish-12 {
-//   background: url('../assets/images/fish12.png') no-repeat;
-//   // height: .74rem;
-//   width: 1.1rem;
-//   transition: transform 10s;
-// }
+.fish-rotate {
+  // animation: rotateFish 1s;
+}
+.fish-1 {
+  background: url('../assets/images/fish1.png') no-repeat;
+  // height: .74rem;
+  width: 1.1rem;
+  transition: transform 10s;
+}
+.fish-2 {
+  background: url('../assets/images/fish2.png') no-repeat;
+  // height: .74rem;
+  width: 1.1rem;
+  transition: transform 10s;
+}
+.fish-3 {
+  background: url('../assets/images/fish3.png') no-repeat;
+  // height: .74rem;
+  width: 1.1rem;
+  transition: transform 10s;
+}
+.fish-4 {
+  background: url('../assets/images/fish4.png') no-repeat;
+  // height: .74rem;
+  width: 1.1rem;
+  transition: transform 10s;
+}
+.fish-5 {
+  background: url('../assets/images/fish5.png') no-repeat;
+  // height: .74rem;
+  width: 1.1rem;
+  transition: transform 10s;
+}
+.fish-6 {
+  background: url('../assets/images/fish6.png') no-repeat;
+  // height: .74rem;
+  width: 1.1rem;
+  transition: transform 10s;
+}
+.fish-7 {
+  background: url('../assets/images/fish7.png') no-repeat;
+  // height: .74rem;
+  width: 1.1rem;
+  transition: transform 10s;
+}
+.fish-8 {
+  background: url('../assets/images/fish8.png') no-repeat;
+  // height: .74rem;
+  width: 1.1rem;
+  transition: transform 10s;
+}
+.fish-9 {
+  background: url('../assets/images/fish9.png') no-repeat;
+  // height: .74rem;
+  width: 1.1rem;
+  transition: transform 10s;
+}
+.fish-10 {
+  background: url('../assets/images/fish10.png') no-repeat;
+  // height: .74rem;
+  width: 1.1rem;
+  transition: transform 10s;
+}
+.fish-11 {
+  background: url('../assets/images/fish11.png') no-repeat;
+  // height: .74rem;
+  width: 1.1rem;
+  transition: transform 10s;
+}
+.fish-12 {
+  background: url('../assets/images/fish12.png') no-repeat;
+  // height: .74rem;
+  width: 1.1rem;
+  transition: transform 10s;
+}
 
-
+@keyframes rotateFish {
+  from {
+    transform: rotate(0)
+  }
+  to {
+    transform: rotate(180deg)
+  }
+}
 </style>
