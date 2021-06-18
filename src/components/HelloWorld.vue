@@ -120,12 +120,12 @@ export default {
 //   animation: bulletmove 5s linear;
 //   position: absolute;
 // }
-@keyframes bulletmove {
-  from {
-    transform: translate(0,0);
-  }
-  to {
-    transform: translateY(-1000px);
-  }
-}
+// @keyframes bulletmove {
+//   from {
+//     transform: translate(0,0);
+//   }
+//   to {
+//     transform: translateY(-1000px);
+//   }
+// }
 </style>
