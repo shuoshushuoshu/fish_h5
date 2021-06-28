@@ -1,5 +1,5 @@
 <template>
-  <div id="fish-wrap" @click="shotClick">
+  <div id="fish-wrap" @click.passive="shotClick">
     
   </div>
 </template>
@@ -14,7 +14,9 @@ export default {
       cannonDom: '',
       currentNum: 1,
       fishHeight: .59,
-      fishList: []
+      fishList: [],
+      fishDomlist: [],
+      hasShot:false
     }
   },
   mounted(){
@@ -23,8 +25,49 @@ export default {
     this.cannonX = this.cannonDom.offsetLeft
     this.cannonY = this.cannonDom.offsetTop
     this.fishStart()
+    this.clearFishList()
   },
   methods: {
+
+    addCoin(x, y) {
+      let wrapDom = document.getElementById('game')
+      let coinDom = document.createElement('div')
+      coinDom.className = 'coin'
+      wrapDom.appendChild(coinDom)
+      coinDom.style.left = x + 'px'
+      coinDom.style.bottom = y + 'px'
+      let coinPos = 1
+      setTimeout(() => {
+        coinDom.remove()
+        this.$emit('addScore', 10)
+      }, 1600);
+      // let pos = cunrrentPos > 3 ? 0 : cunrrentPos
+      try {
+        setInterval(() => {
+          coinDom.style.backgroundPositionY = -0.7 * coinPos + 'rem'
+          coinPos +=2
+          if(coinPos > 7) coinPos = 1
+        }, 200);
+        // console.log(fishNum)
+      } catch (error) {
+        
+      }
+    },
+
+    fishSwim(fishDom, cunrrentPos, fishNum) {
+      let pos = cunrrentPos > 3 ? 0 : cunrrentPos
+      try {
+        let width = this.fishList[fishNum-1 < 0 ? 0 : fishNum-1].width
+        fishDom.style.backgroundPositionY = -pos * width + 'rem'
+        // console.log(fishNum)
+      } catch (error) {
+        
+      }
+      pos += 1
+      setTimeout(() => {
+        this.fishSwim(fishDom, pos,fishNum)
+      }, 200);
+    },
     shotClick(e) {
       this.gunRotate(e)
     },
@@ -44,6 +87,12 @@ export default {
 
 
     bulletShot(deg) {
+      if(this.hasShot) return
+
+      this.hasShot = true 
+      setTimeout(() => {
+        this.hasShot = false 
+      }, 500);
       let platformDom = document.getElementById('platform')
       let bulletDom = document.createElement('div')
       let bulletWarpDom = document.createElement('div')
@@ -54,17 +103,49 @@ export default {
       platformDom.appendChild(bulletWarpDom)
       bulletWarpDom.appendChild(bulletDom)
       bulletDom.style.transform = 'translate3d(0, 10px, 0)'
+      this.hitonObserver(bulletDom)
       setTimeout(() => {
         bulletDom.style.transform = 'translate3d(0, -600px, 0)'
-      }, 100);
-
-
+      }, 10);
+       
+      
       // bulletDom.style.transform = 'rotate(' + deg +'deg)'
       // bulletDom.style.transition = 'transform 2s ease .5s'
       this.currentNum += 1
       bulletDom.addEventListener('transitionend', function(){
         bulletWarpDom.remove()
+        bulletDom.remove()
       })
+    },
+   
+    hitonObserver(bulletDom) {
+      setInterval(() => {
+        let bulletX = bulletDom.getBoundingClientRect().top
+        let bulletY = bulletDom.getBoundingClientRect().left
+        this.fishDomlist.forEach(e => {
+          let fishX =  e.getBoundingClientRect().top
+          let fishY =  e.getBoundingClientRect().left
+          // console.log(Math.abs(bulletX - fishX), Math.abs(bulletY - fishY))
+          // console.log(bulletX , bulletY)
+          if(Math.abs(bulletX - fishX) < 40 && Math.abs(bulletY - fishY) < 40 && bulletX && fishX) {
+            console.log(bulletX, bulletY,fishX, fishY)
+            console.log(this.fishDomlist.length)
+            e.remove()
+            bulletDom.remove()
+            this.addCoin(fishX, fishY)
+          }
+        });
+        // console.log(bulletDom.getBoundingClientRect().x,bulletDom.getBoundingClientRect().y)
+      }, 100);
+      // const config = { attributes: true, childList: true, subtree: true };
+      // const callback = (mutationsList, observer) => {
+      //   let getBoundingClientRect = bulletDom.getBoundingClientRect()
+      //   console.log('postion', `x: ${getBoundingClientRect.x}`, `y: ${getBoundingClientRect.y}`, mutationsList)
+
+      // };
+      // const observer = new MutationObserver(callback);
+      // observer.observe(bulletDom, config);
+
     },
 
 
@@ -96,6 +177,11 @@ export default {
       // fishDom.className = 'fish fish-1'
       fishWrapDom.appendChild(fishDom)
       fishDom.style.bottom = fishStartY + 'px'
+      let domLength = this.fishDomlist.length
+      this.fishDomlist.push(fishDom)
+      if(this.fishDomlist.length - domLength !== 1) {
+        fishDom.remove()
+      }
       if (direction === 1) {
         fishDom.style.right = '0px'
         fishDom.classList.add('fish-rotate')
@@ -105,7 +191,7 @@ export default {
       // if(!this.fishList[fishNum-1].width) return
       try {
         fishDom.style.height = this.fishList[fishNum-1].width + 'rem'
-        console.log(fishNum)
+        // console.log(fishNum)
       } catch (error) {
         
       }
@@ -114,7 +200,7 @@ export default {
 
       setTimeout(() => {
         this.fishStart()
-      }, 1000);
+      }, 2000);
     },
 
 
@@ -123,7 +209,7 @@ export default {
       try {
         let width = this.fishList[fishNum-1 < 0 ? 0 : fishNum-1].width
         fishDom.style.backgroundPositionY = -pos * width + 'rem'
-        console.log(fishNum)
+        // console.log(fishNum)
       } catch (error) {
         
       }
@@ -132,7 +218,14 @@ export default {
         this.fishSwim(fishDom, pos,fishNum)
       }, 200);
     },
-
+    clearFishList() {
+      setTimeout(() => {
+        setInterval(() => {
+          this.fishDomlist.shift()
+          
+        }, 2000);
+      }, 1000 * 30);
+    },
 
     fishTranslate(fishDom,direction) {
       setTimeout(() => {
@@ -148,6 +241,14 @@ export default {
 
 <style lang="scss">
 @import "../css/rem";
+.coin {
+  width: .7rem;
+  height: .7rem;
+  background: url('../assets/images/coinAni2.png') no-repeat;
+  background-size: 100% auto;
+  position: absolute;
+  animation: coinDrop 2s 1;
+}
 #fish-wrap {
   width: 100%;
   height: calc(100% - 1rem);
@@ -162,17 +263,19 @@ export default {
   background: url('../assets/images/bullet1.png') no-repeat;
   background-size: 100% auto;
   position: absolute;
+  top: 0;
+  left: 0;
   // animation: bulletGo 5s linear;
   z-index: 0;
     // transform: translate3d(0, -200px, 0);
-    transition: 2s;
+  transition: 2s linear;
 }
 .bullet-wrap{
   width: .3rem;
   height: .3rem;
   position: absolute;
-  bottom: 0;
-  right: 7.25rem;
+  bottom: .4rem;
+  left: 55%;
 }
 // @keyframes bulletGo {
 //   from {
@@ -190,10 +293,17 @@ export default {
   bottom: 2rem;
   height: 1rem;
   z-index: 100;
+  pointer-events: none;
+}
+.netDom {
+ width: 1rem;
+ height: 1rem; 
+ background: url('../assets/images/web1.png') no-repeat;
+ background-size: 100% 100%;
 }
 .fish-1, .fish-2, .fish-3, .fish-4, .fish-5, .fish-6, .fish-7, .fish-8 {
   background-size: 100% auto !important;
-  // transition: transform 10s;
+  // transition: transform 30s;
   // background: url('../assets/images/fish1.png') no-repeat;
   // width: 1.1rem;
 }
@@ -204,73 +314,73 @@ export default {
   background: url('../assets/images/fish1.png') no-repeat;
   // height: .74rem;
   width: 1.1rem;
-  transition: transform 10s;
+  transition: transform 30s;
 }
 .fish-2 {
   background: url('../assets/images/fish2.png') no-repeat;
   // height: .74rem;
   width: 1.1rem;
-  transition: transform 10s;
+  transition: transform 30s;
 }
 .fish-3 {
   background: url('../assets/images/fish3.png') no-repeat;
   // height: .74rem;
   width: 1.1rem;
-  transition: transform 10s;
+  transition: transform 30s;
 }
 .fish-4 {
   background: url('../assets/images/fish4.png') no-repeat;
   // height: .74rem;
   width: 1.1rem;
-  transition: transform 10s;
+  transition: transform 30s;
 }
 .fish-5 {
   background: url('../assets/images/fish5.png') no-repeat;
   // height: .74rem;
   width: 1.1rem;
-  transition: transform 10s;
+  transition: transform 30s;
 }
 .fish-6 {
   background: url('../assets/images/fish6.png') no-repeat;
   // height: .74rem;
   width: 1.1rem;
-  transition: transform 10s;
+  transition: transform 30s;
 }
 .fish-7 {
   background: url('../assets/images/fish7.png') no-repeat;
   // height: .74rem;
   width: 1.1rem;
-  transition: transform 10s;
+  transition: transform 30s;
 }
 .fish-8 {
   background: url('../assets/images/fish8.png') no-repeat;
   // height: .74rem;
   width: 1.1rem;
-  transition: transform 10s;
+  transition: transform 30s;
 }
 .fish-9 {
   background: url('../assets/images/fish9.png') no-repeat;
   // height: .74rem;
   width: 1.1rem;
-  transition: transform 10s;
+  transition: transform 30s;
 }
 .fish-10 {
   background: url('../assets/images/fish10.png') no-repeat;
   // height: .74rem;
   width: 1.1rem;
-  transition: transform 10s;
+  transition: transform 30s;
 }
 .fish-11 {
   background: url('../assets/images/fish11.png') no-repeat;
   // height: .74rem;
   width: 1.1rem;
-  transition: transform 10s;
+  transition: transform 30s;
 }
 .fish-12 {
   background: url('../assets/images/fish12.png') no-repeat;
   // height: .74rem;
   width: 1.1rem;
-  transition: transform 10s;
+  transition: transform 30s;
 }
 
 @keyframes rotateFish {
@@ -279,6 +389,21 @@ export default {
   }
   to {
     transform: rotate(180deg)
+  }
+}
+
+@keyframes coinDrop {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  10% {
+    transform: translate3d(0, -1.5rem, 0);
+  }
+  70% {
+    transform: translate3d(0, 400px, 0);
+  }
+  100% {
+    transform: translate3d(0, 500px, 0);
   }
 }
 </style>
