@@ -1,13 +1,15 @@
 <template>
   <div id="game">
-  
+     
     <div id="platform">
-      <div id="cannon">
+      <div id="cannon" :class="cannonType ?  'cannon-' + cannonType : ''">
       </div>
+      <div class="add-btn" @click="addCannon"></div>
+      <div class="sub-btn" @click="subCannon"></div>
       <div class="bottom-score">{{userScoreString}}</div>
     </div>
-    <div class="game-before-wrap" v-if="!gameStart">
-      <div class="login-wrap">
+    <div class="game-before-wrap" v-if="toastType">
+      <div class="login-wrap" v-if="toastType === 'gameStart'">
         <p>ログイン</p>
         <div class="email">
           <p>邮箱/用户名</p>
@@ -15,7 +17,7 @@
         </div>
         <div class="password">
           <p>password</p>
-          <input v-model="password"/>
+          <input v-model="password" type="password" />
         </div>
         <div class="okBtn" @click="login">
           <div class="ok-text" v-if="!loading">Log in</div>
@@ -24,9 +26,37 @@
         </div>
         <p class="login-bottom">アカウント持っていませんか？新規登録へ</p>
       </div>
-    </div>
-    <Fish @addScore="addScore" v-else />
+      <div class="rank-wrap" v-else-if="toastType === 'showRank'">
+        <div class="close-btn" @click="toastType = ''">
+          ×
+        </div>
+        <div class="rank-list">
+          <div class="rank-item" v-for="(item,index) in rankList" :key="index">
+            <div class="rank-left">
+              <p class="rank-index">{{index}}</p>
+              <div class="rank-avatar"></div>
+              <p>{{item.name}}</p>
+            </div>
+            <div class="rank-right">
+              <p>{{item.score}}point</p>
+            </div>
+          </div>
+        </div>
 
+      </div>
+      <div class="log-out" v-else>
+        <p @click="toastType = ''">Log out</p>
+        <div class="cancel-btn" @click="toastType = ''">Cancel</div>
+      </div>
+    </div>
+    <Fish @addScore="addScore" v-if="gameStart" :cannonType="cannonType" />
+    <div class="gameStart-btn" v-else @click="gameStart = true">Start</div>
+    <div class="rankBtn" @click="showRankList">
+      排行榜
+    </div>
+    <div class="userInfoBtn" @click="showLogout">
+      avatar
+    </div>
   </div>
 </template>
 
@@ -39,14 +69,28 @@ export default {
   },
   data() {
     return {
-      userScore: 200,
       gameStart: false,
+      userScore: 200,
+      toastType: 'gameStart',
       password: '',
       email: '',
-      loading: false
+      loading: false,
+      cannonType: 7,
+      rankList: [
+        {name: 11, score: 6324},
+        {name: 'sada', score: 2800},
+        {name: 'asfwe', score: 2200},
+        {name: 22, score: 1234},
+        {name: 33, score: 250},
+        {name: 'asdad', score: 100},
+        {name: 'wqqf', score: 10},
+        {name: 'wqqf', score: 10},
+        {name: 'wqqf', score: 10},
+        {name: 'wqqf', score: 10},
+        {name: 'wqqf', score: 10},
+        {name: 'wqqf', score: 10},
+      ]
     }
-  },
-  props: {
   },
 
   mounted() {
@@ -55,11 +99,28 @@ export default {
   computed: {
     userScoreString() {
       return this.numfix(this.userScore, 6)
+    },
+    cannonback() {
+      return "url('../assets/images/cannon" + this.cannonType +".png') no-repeat"
     }
   },
   methods: {
+    addCannon() {
+      this.cannonType = this.cannonType + 1
+      if(this.cannonType > 7) this.cannonType = 1
+    },
+    subCannon() {
+      this.cannonType = this.cannonType - 1
+      if(this.cannonType < 1) this.cannonType = 7
+    },
+    showLogout() {
+      this.toastType = 'showLogout'
+    },
+    showRankList() {
+      this.toastType = 'showRank'
+    },
     login() {
-      this.gameStart = true
+      this.toastType = ''
     },
     numfix(num, length) {
       return ('' + num).length < length ? ((new Array(length + 1)).join('0') + num).slice(-length) : '' + num;
@@ -110,6 +171,108 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss">
 @import "../css/rem";
+
+.gameStart-btn {
+  width:2rem;
+  height: 1rem;
+  font-size: .4rem;
+  line-height: 1rem;
+  background: white;
+  color: black;
+  position: absolute;
+  bottom: 4rem;
+  left: 7rem;
+  border-radius: .5rem;
+  text-align: center;
+}
+.rank-wrap {
+  width: 8rem;
+  height: 6rem;
+  background: rgba(255,255,255,1);
+  border-radius: .4rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+.rank-list {
+  width: 83%;
+  overflow: auto;
+  height: 85%;
+  position: relative;
+  right: .2rem;
+}
+.close-btn {
+  position: absolute;
+  top: .2rem;
+  right: .3rem;
+  width: .5rem;
+  height: .5rem;
+  border-radius: 100%;
+  line-height: .5rem;
+  font-size: .3rem;
+  color: black;
+  text-align: center;
+  background: gray;
+}
+.log-out {
+  width: 5rem;
+  height: 3rem;
+  background: rgba(255,255,255,1);
+  border-radius: .3rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  bottom: 2rem;
+  p {
+    font-size: .3rem;
+    color: red;
+    line-height: .6rem;
+  }
+  .cancel-btn {
+    font-size: .2rem;
+    width: 2rem;
+    height: .5rem;
+    border-radius: .2rem;
+    background: gray;
+    color: black;
+    text-align: center;
+    line-height: .5rem;
+    margin-top: .5rem;
+  }
+}
+.rank-item {
+  width: 100%;
+  height: .8rem;
+  line-height: .8rem;
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+  .rank-left {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+  }
+  .rank-index {
+    width: .3rem;
+    text-align: right;
+  }
+  .rank-avatar {
+    width: .5rem;
+    height: .5rem;
+    background: gray;
+    border-radius: 100%;
+    margin: 0 .2rem;
+  }
+  p {
+    font-size: .3rem;
+    color: black;
+    line-height: .8rem;
+  }
+}
 .bottom-score {
   font-size: .35rem;
   font-family: PingFangSC-Semibold, PingFang SC;
@@ -145,6 +308,7 @@ export default {
   justify-content: center;
   padding-bottom: 1rem;
   align-items: flex-end;
+  z-index: 1000;
 }
 .okBtn {
   width: 1.5rem;
@@ -162,6 +326,35 @@ export default {
     margin-bottom: 0;
   }
 }
+.rankBtn {
+  width: 1.5rem;
+  height: .6rem;
+  line-height: .6rem;
+  font-size: .2rem;
+  color: black;
+  position: fixed;
+  bottom: 6rem;
+  right: 2rem;
+  background: white;
+  border-radius: .4rem;
+  text-align: center;
+  z-index: 200;
+}
+.userInfoBtn {
+  width: .6rem;
+  height: .6rem;
+  border-radius: 100%;
+  background: white;
+  color: black;
+  position: fixed;
+  line-height: .6rem;
+  bottom: 6rem;
+  right: 1rem;
+  font-size: .2rem;
+  text-align: center;
+  z-index: 200;
+  
+}
 .login-wrap {
   width: 8rem;
   height: 6rem;
@@ -176,11 +369,12 @@ export default {
     text-decoration: underline;
   }
   p {
-    font-size: .2rem;
+    font-size: .18rem;
     height: .3rem;
     line-height: .3rem;
     margin-bottom: .2rem;
     text-align: center;
+    font-weight: 500;
   }
 }
 .email, .password {
@@ -218,9 +412,6 @@ export default {
 #cannon {
   width: .74rem;
   height: .74rem;
-  background: url('../assets/images/cannon1.png') no-repeat;
-  background-size: 100% auto;
-  background-position: 0 -2.22rem;
   position: absolute;
   bottom: 0;
   left: 52%;
@@ -228,6 +419,63 @@ export default {
   justify-content: center;
   align-items: center;
   z-index: 2;
+}
+.add-btn {
+  width: .5rem;
+  height: .4rem;
+  position: absolute;
+  bottom: 0;
+  left: 49%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2;
+  background: url('../assets/images/cannon_plus.png') no-repeat;
+  background-size: 100% 100%;
+}
+
+.sub-btn {
+  width: .5rem;
+  height: .4rem;
+  position: absolute;
+  bottom: 0;
+  left: 57%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2;
+  background: url('../assets/images/cannon_minus.png') no-repeat;
+  background-size: 100% 100%;
+}
+.cannon-1 {
+  background: url('../assets/images/cannon1.png') no-repeat;
+  background-size: 100% auto;
+}
+.cannon-2 {
+  background: url('../assets/images/cannon2.png') no-repeat;
+  background-size: 100% auto;
+
+}
+.cannon-3 {
+  background: url('../assets/images/cannon3.png') no-repeat;
+  background-size: 100% auto;
+}
+.cannon-4 {
+  background: url('../assets/images/cannon4.png') no-repeat;
+  background-size: 100% auto;
+  height: .8rem !important;
+}
+.cannon-5 {
+  background: url('../assets/images/cannon5.png') no-repeat;
+  background-size: 100% auto;
+}
+.cannon-6 {
+  background: url('../assets/images/cannon6.png') no-repeat;
+  background-size: 100% auto;
+}
+.cannon-7 {
+  background: url('../assets/images/cannon7.png') no-repeat;
+  background-size: 100% auto;
 }
 
 @keyframes fade {
