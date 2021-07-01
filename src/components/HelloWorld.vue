@@ -10,14 +10,14 @@
     </div>
     <div class="game-before-wrap" v-if="toastType">
       <div class="login-wrap" v-if="toastType === 'gameStart'">
-        <p>ログイン</p>
+        <p class="login-text">Sign in</p>
         <div class="email">
-          <p>邮箱/用户名</p>
-          <input v-model="email"/>
+          <img src="../assets/icons/user_name.png" alt="">
+          <input v-model="email" placeholder="Usurname or email" />
         </div>
         <div class="password">
-          <p>password</p>
-          <input v-model="password" type="password" />
+          <img src="../assets/icons/user_pass.png" alt="">
+          <input v-model="password" placeholder="Password" type="password" />
         </div>
         <div class="okBtn" @click="login">
           <div class="ok-text" v-if="!loading">Log in</div>
@@ -33,7 +33,8 @@
         <div class="rank-list">
           <div class="rank-item" v-for="(item,index) in rankList" :key="index">
             <div class="rank-left">
-              <p class="rank-index">{{index}}</p>
+              <div class="crown-img" v-if="index < 3" :class="index < 3 ? 'crown-' + parseInt(index+1) : ''" alt=""></div>
+              <p v-else class="rank-index">{{index + 1}}</p>
               <div class="rank-avatar"></div>
               <p>{{item.name}}</p>
             </div>
@@ -49,18 +50,19 @@
         <div class="cancel-btn" @click="toastType = ''">Cancel</div>
       </div>
     </div>
-    <Fish @addScore="addScore" v-if="gameStart" :cannonType="cannonType" />
-    <div class="gameStart-btn" v-else @click="gameStart = true">Start</div>
+    <Fish @changeScore="changeScore" v-if="gameStart" :cannonType="cannonType" />
+    <div class="gameStart-btn" v-else-if="!gameStart && !toastType" @click="gameStart = true">Start</div>
     <div class="rankBtn" @click="showRankList">
-      排行榜
+      <p>排行榜</p>
     </div>
     <div class="userInfoBtn" @click="showLogout">
-      avatar
+      <img src="" alt="">
     </div>
   </div>
 </template>
 
 <script>
+import axios from "axios"
 import Fish from './Fish.vue'
 export default {
   name: 'HelloWorld',
@@ -95,6 +97,7 @@ export default {
 
   mounted() {
     this.resizeUI()
+    this.login()
   },
   computed: {
     userScoreString() {
@@ -120,12 +123,15 @@ export default {
       this.toastType = 'showRank'
     },
     login() {
+      axios.get('/v1/game/rank').then(res=>{
+        debugger
+      })
       this.toastType = ''
     },
     numfix(num, length) {
       return ('' + num).length < length ? ((new Array(length + 1)).join('0') + num).slice(-length) : '' + num;
     },
-    addScore(score) {
+    changeScore(score) {
       this.userScore = this.userScore + score
     },
     resizeUI() {
@@ -186,10 +192,9 @@ export default {
   text-align: center;
 }
 .rank-wrap {
-  width: 8rem;
-  height: 6rem;
-  background: rgba(255,255,255,1);
-  border-radius: .4rem;
+  width:11.4rem;
+  height: 6.1rem;
+  background: rgba(0,0,0,1);
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -246,16 +251,34 @@ export default {
 }
 .rank-item {
   width: 100%;
-  height: .8rem;
-  line-height: .8rem;
+  height: .9rem;
+  line-height: .9rem;
   display: flex;
   justify-content: space-between;
   position: relative;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.4);;
   .rank-left {
     display: flex;
     align-items: center;
     justify-content: flex-start;
   }
+  .crown-img {
+    width: .3rem;
+    height: .4rem;
+  }
+  .crown-1 {
+    background: url('../assets/icons/crown_1.png') no-repeat;
+    background-size: 100% 100%;
+  }
+    .crown-2 {
+    background: url('../assets/icons/crown_2.png') no-repeat;
+    background-size: 100% 100%;
+  }
+    .crown-3 {
+    background: url('../assets/icons/crown_3.png') no-repeat;
+    background-size: 100% 100%;
+  }
+
   .rank-index {
     width: .3rem;
     text-align: right;
@@ -268,9 +291,9 @@ export default {
     margin: 0 .2rem;
   }
   p {
-    font-size: .3rem;
-    color: black;
-    line-height: .8rem;
+    font-size: .24rem;
+    color: #FFFFFF;
+    line-height: .9rem;
   }
 }
 .bottom-score {
@@ -327,18 +350,25 @@ export default {
   }
 }
 .rankBtn {
-  width: 1.5rem;
+  width: .81rem;
   height: .6rem;
-  line-height: .6rem;
-  font-size: .2rem;
-  color: black;
   position: fixed;
   bottom: 6rem;
-  right: 2rem;
+  right: .6rem;
   background: white;
   border-radius: .4rem;
   text-align: center;
   z-index: 200;
+  background: url('../assets/icons/rank.png') no-repeat;
+  background-size: 100% 100%;
+  p {
+    font-size: .12rem;
+    font-family: Helvetica;
+    color: #FFE744;
+    line-height: .12rem;
+    position: absolute;
+    top: -.2rem;
+  }
 }
 .userInfoBtn {
   width: .6rem;
@@ -348,25 +378,39 @@ export default {
   color: black;
   position: fixed;
   line-height: .6rem;
-  bottom: 6rem;
-  right: 1rem;
+  bottom: .1rem;
+  right: .6rem;
   font-size: .2rem;
   text-align: center;
   z-index: 200;
-  
+  background: url('../assets/icons/avatar_border.png') no-repeat;
+  background-size: 100% 100%;
 }
 .login-wrap {
-  width: 8rem;
-  height: 6rem;
+  width: 7.1rem;
+  height: 4.6rem;
   background: rgba(255,255,255,1);
-  border-radius: .4rem;
+  // border-radius: .4rem;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  background: url('../assets/icons/login-back.png') no-repeat;
+  background-size: 100% 100%;
+  .login-text {
+    font-size: .3rem;
+    font-family: Helvetica;
+    color: #B6A159;
+    line-height: .36rem;
+    width: 3.6rem;
+    height: .36rem;
+    text-align: left;
+  }
   .login-bottom {
-    color: blue;
-    text-decoration: underline;
+    font-size: .12rem;
+    font-family: Helvetica;
+    color: #FFFFFF;
+    line-height: .14rem;
   }
   p {
     font-size: .18rem;
@@ -375,6 +419,7 @@ export default {
     margin-bottom: .2rem;
     text-align: center;
     font-weight: 500;
+
   }
 }
 .email, .password {
@@ -382,15 +427,28 @@ export default {
   flex-direction: column;
   justify-content: center;
   align-items: flex-start;
-  width: 80%;
+  width: 3.6rem;
+  height: .43rem;
+  margin-bottom: .26rem;
+  position: relative;
   input {
     width: 100%;
-    height: 1rem;
-    background: rgb(195, 195, 195);
-    border-radius: .2rem;
+    height: 100%;
     margin-bottom: .2rem;
-    padding-left: .2rem;
-    font-size: .5rem;
+    padding-left: .4rem !important;
+    // background-color: ;
+    font-size: .11rem;
+    font-family: Helvetica;
+    color: #FFFFFF;
+    line-height: .43rem;
+    background: linear-gradient(270deg, rgba(182, 161, 89, 0) 0%, rgba(182, 161, 89, 0.3) 100%) !important;
+  }
+  img {
+    position: absolute;
+    width: .14rem;
+    height: .13rem;
+    bottom: .25rem;
+    left: .1rem;
   }
 }
 #platform {
@@ -463,7 +521,6 @@ export default {
 .cannon-4 {
   background: url('../assets/images/cannon4.png') no-repeat;
   background-size: 100% auto;
-  height: .8rem !important;
 }
 .cannon-5 {
   background: url('../assets/images/cannon5.png') no-repeat;

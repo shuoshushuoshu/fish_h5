@@ -48,8 +48,18 @@ export default {
   
       setTimeout(() => {
         boomDom.remove()
-      }, 1000);
+      }, 500);
     },
+
+    ifFishCatch(fishType, bulletType) {
+      let bulletRandom = Math.random()
+      let fishRandom = Math.random()
+      let bulletOk = bulletRandom < this.cannonList[bulletType - 1].chance
+      let fishOk = fishRandom < this.fishList[fishType - 1].chance
+      let ifHiton = bulletOk || fishOk
+      return ifHiton
+    },
+
     deadFishSwim(fishDom, cunrrentPos, fishNum) {
       let pos = cunrrentPos > 8 ?  4 : cunrrentPos
       try {
@@ -64,6 +74,7 @@ export default {
         this.fishSwim(fishDom, pos,fishNum)
       }, 200);
     },
+
     fishDead(x, y) {
       let wrapDom = document.getElementById('game')
       let deadFishDom = document.createElement('div')
@@ -80,7 +91,8 @@ export default {
       this.deadFishSwim(deadFishDom, 4, this.currentNum);
 
     },
-    addCoin(x, y) {
+
+    addCoin(x, y, fishType) {
       // this.fishDead(x,y)
       let wrapDom = document.getElementById('game')
       let coinDom = document.createElement('div')
@@ -89,11 +101,10 @@ export default {
       coinDom.style.left = x + 'px'
       coinDom.style.bottom = y + 'px'
 
-
       let coinPos = 1
       setTimeout(() => {
         coinDom.remove()
-        this.$emit('addScore', 10)
+        this.$emit('changeScore', this.fishList[fishType -1].score)
       }, 1600);
       // let pos = cunrrentPos > 3 ? 0 : cunrrentPos
       try {
@@ -122,6 +133,7 @@ export default {
         this.fishSwim(fishDom, pos,fishNum)
       }, 100);
     },
+
     shotClick(e) {
       this.gunRotate(e)
     },
@@ -147,15 +159,18 @@ export default {
       let cannonAni = setInterval(() => {
         cannonDom.style.backgroundPositionY = -pos * this.cannonList[this.cannonType - 1].height + 'rem'
         pos = pos + 1
-        if(pos > 4) clearInterval(cannonAni)
+        if(pos > 4) {
+          clearInterval(cannonAni)
+          cannonDom.style.backgroundPositionY = 0
+        } 
       }, 100);
- 
     },
 
     bulletShot(deg) {
       if(this.hasShot) return
       this.shotAni()
-      this.hasShot = true 
+      this.hasShot = true
+      this.$emit('changeScore', this.cannonType * -1)
       setTimeout(() => {
         this.hasShot = false 
       }, 500);
@@ -166,11 +181,11 @@ export default {
       bulletWarpDom.style.transform = 'rotate(' + deg +'deg)'
       // console.log(deg)
       // this.addBulletEvent(bulletWarpDom)
-      bulletDom.className = 'bullet bullet-' + this.currentNum
+      bulletDom.className = 'bullet bullet-' + this.cannonType
       platformDom.appendChild(bulletWarpDom)
       bulletWarpDom.appendChild(bulletDom)
       bulletDom.style.transform = 'translate3d(0, 10px, 0)'
-      this.hitonObserver(bulletDom)
+      this.hitonObserver(bulletDom, this.cannonType)
       setTimeout(() => {
         bulletDom.style.transform = 'translate3d(0, -600px, 0)'
       }, 10);
@@ -185,7 +200,7 @@ export default {
       })
     },
 
-    hitonObserver(bulletDom) {
+    hitonObserver(bulletDom, cannonNum) {
       setInterval(() => {
         let bulletX = bulletDom.getBoundingClientRect().top
         let bulletY = bulletDom.getBoundingClientRect().left
@@ -219,14 +234,17 @@ export default {
             this.bulletBoom(bulletX,bulletY)
             // console.log(e.getBoundingClientRect().top)
             let translates = document.defaultView.getComputedStyle(e,null).transform;
-
+          
             let translateX = parseFloat(translates.substring(6).split(',')[4]);
-            console.log(translateX)
+            
+            let fishType = parseInt(e.className.split('-')[1])
             // e.style.transform = 'translate3d('+ translateX + 'px, 0px, 0px) !important'
-            // e.remove()
-            // console.log(e.getBoundingClientRect().bottom)
             bulletDom.remove()
-            this.addCoin(fishX2, fishY2)
+            if(this.ifFishCatch(fishType,cannonNum)) {
+              e.remove()
+              this.addCoin(fishX2, fishY2, fishType)
+            }
+            // console.log(e.getBoundingClientRect().bottom)
           }
         });
         // console.log(bulletDom.getBoundingClientRect().x,bulletDom.getBoundingClientRect().y)
@@ -290,7 +308,7 @@ export default {
       }
       if (direction === 1) {
         fishDom.style.right = '0px'
-        fishDom.classList.add('fish-rotate')
+        // fishDom.classList.add('fish-rotate')
       } else {
         fishDom.style.left = '0px'
       }
@@ -364,13 +382,11 @@ export default {
   background: url('../assets/images/web1.png') no-repeat;
   position: absolute;
   background-size: 100% 100%;
-  animation: boom 1s 1;
+  animation: boom .5s 1;
 }
 .bullet {
   width: .3rem;
   height: .3rem;
-  background: url('../assets/images/bullet1.png') no-repeat;
-  background-size: 100% auto;
   position: absolute;
   top: 0;
   left: 0;
@@ -379,6 +395,35 @@ export default {
     // transform: translate3d(0, -200px, 0);
   transition: 2s linear;
 }
+.bullet-1 {
+  background: url('../assets/images/bullet1.png') no-repeat;
+  background-size: 100% auto;
+}
+.bullet-2 {
+  background: url('../assets/images/bullet2.png') no-repeat;
+  background-size: 100% auto;
+}
+.bullet-3 {
+  background: url('../assets/images/bullet3.png') no-repeat;
+  background-size: 100% auto;
+}
+.bullet-4 {
+  background: url('../assets/images/bullet4.png') no-repeat;
+  background-size: 100% auto;
+}
+.bullet-5 {
+  background: url('../assets/images/bullet5.png') no-repeat;
+  background-size: 100% auto;
+}
+.bullet-6 {
+  background: url('../assets/images/bullet6.png') no-repeat;
+  background-size: 100% auto;
+}
+.bullet-7 {
+  background: url('../assets/images/bullet7.png') no-repeat;
+  background-size: 100% auto;
+}
+
 .bullet-wrap{
   width: .3rem;
   height: .3rem;
