@@ -87,7 +87,7 @@ export default {
   mounted() {
     this.resizeUI()
     this.getRankList()
-    this.login()
+    // this.login()
   },
   computed: {
     userScoreString() {
