@@ -11,8 +11,8 @@ module.exports = {
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {
-      '/api': {
-        target: 'http://www.intmote.com',//设置你调用的接口域名和端口号 别忘了加http
+      '/fishing': {
+        target: 'http://d95103215e61.ngrok.io',//设置你调用的接口域名和端口号 别忘了加http
         changeOrigin: true,//允许跨域
         pathRewrite: {
           '^/api': '' //这个是定义要访问的路径，名字随便写 

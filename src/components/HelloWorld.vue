@@ -19,8 +19,8 @@
           <img src="../assets/icons/user_pass.png" alt="">
           <input v-model="password" placeholder="Password" type="password" />
         </div>
-        <div class="okBtn" @click="login">
-          <div class="ok-text" v-if="!loading">Log in</div>
+        <div class="okBtn">
+          <div class="ok-text" v-if="!loading" @click="login">Log in</div>
           <div v-else class="loading">
           </div>
         </div>
@@ -30,7 +30,7 @@
         <div class="close-btn" @click="toastType = ''">
           ×
         </div>
-        <div class="rank-list">
+        <div class="rank-list" @scroll="listScroll">
           <div class="rank-item" v-for="(item,index) in rankList" :key="index">
             <div class="rank-left">
               <div class="crown-img" v-if="index < 3" :class="index < 3 ? 'crown-' + parseInt(index+1) : ''" alt=""></div>
@@ -78,25 +78,15 @@ export default {
       email: '',
       loading: false,
       cannonType: 7,
-      rankList: [
-        {name: 11, score: 6324},
-        {name: 'sada', score: 2800},
-        {name: 'asfwe', score: 2200},
-        {name: 22, score: 1234},
-        {name: 33, score: 250},
-        {name: 'asdad', score: 100},
-        {name: 'wqqf', score: 10},
-        {name: 'wqqf', score: 10},
-        {name: 'wqqf', score: 10},
-        {name: 'wqqf', score: 10},
-        {name: 'wqqf', score: 10},
-        {name: 'wqqf', score: 10},
-      ]
+      pageIndex: 1,
+      pageSize: 10,
+      rankList: []
     }
   },
 
   mounted() {
     this.resizeUI()
+    this.getRankList()
     this.login()
   },
   computed: {
@@ -108,6 +98,28 @@ export default {
     }
   },
   methods: {
+    listScroll(e) {
+      if(this.rankList.length%10 !== 0) return
+
+      if(e.currentTarget.scrollTop +  e.currentTarget.clientHeight > (e.currentTarget.scrollHeight -10)) {
+        pageNo += 1
+        this.getRankList()
+        // console.log('到底了')
+      }
+    },
+    getRankList() {
+      let url = '/fishing/v1/game/rank'
+      let data = {
+        pageNo: this.pageIndex,
+        pageSize:this.pageSize
+      }
+      this.$axios.get(url, {
+        params:data
+      }).then(res=>{
+        this.rankList.push(...res.data.list)
+        
+      })
+    },
     addCannon() {
       this.cannonType = this.cannonType + 1
       if(this.cannonType > 7) this.cannonType = 1
@@ -123,8 +135,15 @@ export default {
       this.toastType = 'showRank'
     },
     login() {
-      axios.get('/v1/game/rank').then(res=>{
-        debugger
+      let url = "/fishing/v1/login"
+      let data = {
+        username: 'mockUser',
+        password: '123'
+      }
+
+      this.$axios.post(url, data).then(res=>{
+      }).catch(err =>{
+
       })
       this.toastType = ''
     },
@@ -194,32 +213,32 @@ export default {
 .rank-wrap {
   width:11.4rem;
   height: 6.1rem;
-  background: rgba(0,0,0,1);
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   position: relative;
+  background: url('../assets/icons/rank-back.png') no-repeat;
+  background-size: 100% 100%;
 }
 .rank-list {
   width: 83%;
   overflow: auto;
-  height: 85%;
+  height: 75%;
   position: relative;
   right: .2rem;
 }
 .close-btn {
   position: absolute;
-  top: .2rem;
-  right: .3rem;
+  top: .5rem;
+  right: .9rem;
   width: .5rem;
   height: .5rem;
   border-radius: 100%;
   line-height: .5rem;
   font-size: .3rem;
-  color: black;
+  color: white;
   text-align: center;
-  background: gray;
 }
 .log-out {
   width: 5rem;
@@ -261,6 +280,9 @@ export default {
     display: flex;
     align-items: center;
     justify-content: flex-start;
+  }
+  .rank-right {
+    margin-right: .6rem;
   }
   .crown-img {
     width: .3rem;
