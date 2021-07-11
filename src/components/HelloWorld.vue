@@ -14,14 +14,20 @@
         <div class="email">
           <img src="../assets/icons/user_name.png" alt="">
           <input v-model="email" placeholder="Usurname or email" />
+
         </div>
         <div class="password">
           <img src="../assets/icons/user_pass.png" alt="">
           <input v-model="password" placeholder="Password" type="password" />
         </div>
+        <div class="warn-line">{{warnText}}</div>
+
         <div class="okBtn">
-          <div class="ok-text" v-if="!loading" @click="login">Log in</div>
+          <img v-if="!loading" @click="login" class="ok-text" src="../assets/icons/login-btn.png" alt="">
           <div v-else class="loading">
+            <div class="loading-item" :class="loadingIndex === 1 ? 'load-on' : ''"></div>
+            <div class="loading-item" :class="loadingIndex === 2 ? 'load-on' : ''"></div>
+            <div class="loading-item" :class="loadingIndex === 3 ? 'load-on' : ''"></div>
           </div>
         </div>
         <p class="login-bottom">アカウント持っていませんか？新規登録へ</p>
@@ -77,10 +83,12 @@ export default {
       password: '',
       email: '',
       loading: false,
+      loadingIndex: false,
       cannonType: 1,
       pageIndex: 1,
       pageSize: 10,
-      rankList: []
+      rankList: [],
+      warnText:'',
     }
   },
 
@@ -134,18 +142,42 @@ export default {
     showRankList() {
       this.toastType = 'showRank'
     },
+    showloading() {
+      this.loading = true
+      setInterval(() => {
+        this.loadingIndex +=1
+        if(this.loadingIndex > 3) this.loadingIndex=1 
+        
+      }, 500);
+    },
     login() {
+      if(!this.username){
+        this.warnText = 'No username'
+        // return
+      }
+      if(!this.password) {
+        this.warnText = 'No password'
+        // return
+      }
+      // setTimeout(() => {
+      //   this.showWarn = true
+      //   this.warnText = ''
+      // }, 2000);
+      // this.showloading()
       let url = "/fishing/v1/login"
       let data = {
-        username: 'mockUser',
-        password: '123'
+        username: this.username,
+        password: this.password
       }
 
       this.$axios.post(url, data).then(res=>{
+        this.toastType = ''
+        this.loading = false
       }).catch(err =>{
+      this.toastType = ''
+        this.loading = false
 
       })
-      this.toastType = ''
     },
     numfix(num, length) {
       return ('' + num).length < length ? ((new Array(length + 1)).join('0') + num).slice(-length) : '' + num;
@@ -196,7 +228,48 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss">
 @import "../css/rem";
-
+.loading {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  .loading-item {
+    width: .1rem;
+    height: .1rem;
+    background: white;
+    margin: 0 .5rem;
+    border-radius: 100%;
+  }
+  .load-on {
+    width: .05rem;
+    height: .05rem;
+  }
+}
+.warn-toast {
+  position: absolute;
+  width: 2rem;
+  height: 1rem;
+  background: white;
+  z-index: 300;
+  transition: all .1;
+  top: 4rem;
+  left: 6rem;
+  p {
+    color: white;
+    line-height: 1rem;
+    font-size: .3rem;
+  }
+}
+.warn-line {
+  height: .4rem;
+  width: 2rem;
+  font-size: .24rem;
+  color: red;
+  position: relative;
+  right: .7rem;
+  bottom: .1rem;
+}
 .gameStart-btn {
   width:2rem;
   height: 1rem;
@@ -343,15 +416,21 @@ export default {
   z-index: 1000;
 }
 .okBtn {
-  width: 1.5rem;
-  height: .7rem;
+  width: .99rem;
+  height: .31rem;
   background: rgb(100, 98, 98);
-  margin: .3rem 0;
+  margin-bottom: .1rem;
   border-radius: .2rem;
+  position: relative;
+  right: 1.25rem;
+  bottom: .1rem;
+  margin: .1rem 0 .3rem 0;
   .ok-text {
     font-size: .3rem;
     height: .7rem;
     line-height: .7rem;
+    width: .99rem;
+    height: .31rem;
     width: 100%;
     text-align: center;
     color: black;
@@ -420,6 +499,8 @@ export default {
     font-family: Helvetica;
     color: #FFFFFF;
     line-height: .14rem;
+    position: relative;
+    left: .5rem
   }
   p {
     font-size: .18rem;
@@ -438,12 +519,13 @@ export default {
   align-items: flex-start;
   width: 3.6rem;
   height: .43rem;
-  margin-bottom: .26rem;
+  flex-shrink: 0;
+  margin-bottom: .1rem;
   position: relative;
   input {
     width: 100%;
     height: 100%;
-    margin-bottom: .2rem;
+    margin-bottom: .1rem;
     padding-left: .4rem !important;
     // background-color: ;
     font-size: .11rem;
@@ -451,12 +533,14 @@ export default {
     color: #FFFFFF;
     line-height: .43rem;
     background: linear-gradient(270deg, rgba(182, 161, 89, 0) 0%, rgba(182, 161, 89, 0.3) 100%) !important;
+    flex-shrink: 0;
   }
   img {
     position: absolute;
-    width: .14rem;
-    height: .13rem;
-    bottom: .25rem;
+    flex-shrink: 0;
+    width: .2rem;
+    height: .2rem;
+    bottom: .2rem;
     left: .1rem;
   }
 }

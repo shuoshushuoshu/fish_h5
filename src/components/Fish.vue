@@ -327,7 +327,7 @@ export default {
       let fishDom = document.createElement('div')
       let fishDomHeight = fishWrapDom.clientHeight
       let fishStartY = Math.random() * fishDomHeight / 3
-      fishDom.className = 'fish fish-' + fishNum
+      fishDom.className = `fish fish-${fishNum} fishroate${direction}`
       // fishDom.className = 'fish fish-1'
       fishWrapDom.appendChild(fishDom)
       fishDom.style.bottom = fishStartY + 'px'
@@ -586,10 +586,12 @@ export default {
   background-size: 100% auto !important;
   transition: transform 30s;
 }
-
+.fishroate1 {
+  // animation:rotateFish 5s infinite;
+}
 @keyframes rotateFish {
   from {
-    transform: rotate(0)
+    transform: rotate(180deg)
   }
   to {
     transform: rotate(180deg)
