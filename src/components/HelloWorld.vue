@@ -77,7 +77,7 @@ export default {
       password: '',
       email: '',
       loading: false,
-      cannonType: 7,
+      cannonType: 1,
       pageIndex: 1,
       pageSize: 10,
       rankList: []
@@ -318,20 +318,7 @@ export default {
     line-height: .9rem;
   }
 }
-.bottom-score {
-  font-size: .35rem;
-  font-family: PingFangSC-Semibold, PingFang SC;
-  font-weight: 600;
-  color: #AF0187;
-  line-height: .67rem;
-  position: absolute;
-  bottom: .06rem;
-  width: 2rem;
-  height: .5rem;
-  left: 2.75rem;
-  z-index: 2;
-  letter-spacing: .15rem;
-}
+
 
 #game {
   width: 100vh;
@@ -473,14 +460,30 @@ export default {
     left: .1rem;
   }
 }
+.bottom-score {
+  font-size: .3rem;
+  font-family: PingFangSC-Semibold, PingFang SC;
+  font-weight: 600;
+  color: black;
+  line-height: .7rem;
+  position: absolute;
+  bottom: .06rem;
+  width: 2rem;
+  height: .5rem;
+  left: 0.3rem;
+  z-index: 2;
+  letter-spacing: .16rem;
+}
 #platform {
   position: absolute;
   bottom: 0px;
-  width: 100vh;
+  left: 2rem;
+  flex-shrink: 0;
   height: 1rem;
+  width: 13rem;
   background: url('../assets/images/bottom-bar.png') no-repeat;
-  background-size: 70vh auto;
-  background-position: center bottom;
+  background-size:auto 100%;
+  background-position: left bottom;
   img {
     width: 1rem;
     height: auto;
@@ -494,7 +497,7 @@ export default {
   height: .74rem;
   position: absolute;
   bottom: 0;
-  left: 52%;
+  left: 5.6rem;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -505,7 +508,7 @@ export default {
   height: .4rem;
   position: absolute;
   bottom: 0;
-  left: 49%;
+  left: 6.4rem;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -519,7 +522,7 @@ export default {
   height: .4rem;
   position: absolute;
   bottom: 0;
-  left: 57%;
+  left: 5.1rem;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -528,7 +531,7 @@ export default {
   background-size: 100% 100%;
 }
 .cannon-1 {
-  background: url('../assets/images/cannon1.png') no-repeat;
+  background: url('../assets/icons/cannon1.png') no-repeat;
   background-size: 100% auto;
 }
 .cannon-2 {

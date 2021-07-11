@@ -144,11 +144,12 @@ export default {
       let clickX = e.layerY
       let clickY = e.layerX
       let y = clickY - this.cannonY
-      let x = clickX - this.cannonX - 20
+      let x = clickX - this.cannonX -120
       let deg = Math.atan(x/y)*180/Math.PI
       // console.log(deg)
-      // console.log(clickX,clickY,this.cannonX,this.cannonY, x, y, deg)
-      // this.cannonDom.style.transform = 'rotate(90deg)'a
+      console.log(clickX,clickY,this.cannonX,this.cannonY, x, y, deg)
+      // this.cannonDom.style.transform = 'rotate(90deg)'
+      
       this.cannonDom.style.transform = 'rotate(' + deg +'deg)'
       this.bulletShot(deg)
     },
@@ -205,26 +206,36 @@ export default {
         let bulletX = bulletDom.getBoundingClientRect().top
         let bulletY = bulletDom.getBoundingClientRect().left
         this.fishDomlist.forEach(e => {
-          let fishX1 =  e.getBoundingClientRect().top + e.offsetWidth
-          let fishX2 =  e.getBoundingClientRect().top + e.offsetWidth/2
+          let fishX1 =  e.getBoundingClientRect().top + e.offsetWidth/2
+          let fishX2 =  e.getBoundingClientRect().top + e.offsetWidth/4
           let fishX3 =  e.getBoundingClientRect().top
-          let fishY1=  e.getBoundingClientRect().left + e.offsetHeight/2
-          let fishY2=  e.getBoundingClientRect().left + e.offsetHeight
-          let fishY3=  e.getBoundingClientRect().left
+          let fishY1=  e.getBoundingClientRect().left
+          let fishY2=  e.getBoundingClientRect().left + e.offsetHeight/4
+          let fishY3=  e.getBoundingClientRect().left + e.offsetHeigh/2
+          let fishY4=  e.getBoundingClientRect().left + (e.offsetHeigh/4)*3
+          let fishY5=  e.getBoundingClientRect().left + e.offsetHeigh
           let isHiton = false
-          if(Math.abs(bulletX - fishX1) < 20 && Math.abs(bulletY - fishY1) < 20) {
+          if(Math.abs(bulletX - fishX1) < 20 && Math.abs(bulletY - fishY3) < 20) {
             isHiton = true
           } else if(Math.abs(bulletX - fishX1) < 20 && Math.abs(bulletY - fishY2) < 20) {
             isHiton = true
-          } else if(Math.abs(bulletX - fishX1) < 20 && Math.abs(bulletY - fishY3) < 20){
+          } else if(Math.abs(bulletX - fishX1) < 20 && Math.abs(bulletY - fishY4) < 20){
+            isHiton = true
+          } else if(Math.abs(bulletX - fishX2) < 20 && Math.abs(bulletY - fishY1) < 20){
             isHiton = true
           } else if(Math.abs(bulletX - fishX2) < 20 && Math.abs(bulletY - fishY2) < 20){
             isHiton = true
-          } else if(Math.abs(bulletX - fishX3) < 20 && Math.abs(bulletY - fishY1) < 20){
+          } else if(Math.abs(bulletX - fishX2) < 20 && Math.abs(bulletY - fishY3) < 20){
+            isHiton = true
+          } else if(Math.abs(bulletX - fishX2) < 20 && Math.abs(bulletY - fishY4) < 20){
+            isHiton = true
+          } else if(Math.abs(bulletX - fishX2) < 20 && Math.abs(bulletY - fishY5) < 20){
+            isHiton = true
+          } else if(Math.abs(bulletX - fishX3) < 20 && Math.abs(bulletY - fishY3) < 20){
             isHiton = true
           } else if(Math.abs(bulletX - fishX3) < 20 && Math.abs(bulletY - fishY2) < 20){
             isHiton = true
-          } else if(Math.abs(bulletX - fishX3) < 20 && Math.abs(bulletY - fishY3) < 20){
+          } else if(Math.abs(bulletX - fishX3) < 20 && Math.abs(bulletY - fishY4) < 20){
             isHiton = true
           }
           // console.log(Math.abs(bulletX - fishX), Math.abs(bulletY - fishY))
@@ -277,10 +288,39 @@ export default {
     //   observer.observe(bulletDom, config);
     // },
 
-
+    getFishNum(fishMath) {
+      if(fishMath > 0 && fishMath < 4) {
+        return 1
+      } else if(fishMath > 0 && fishMath < 5) {
+        return 2
+      }else if(fishMath > 5 && fishMath < 10) {
+        return 3
+      }else if(fishMath > 10 && fishMath < 16) {
+        return 4
+      }else if(fishMath > 16 && fishMath < 20) {
+        return 5
+      }else if(fishMath > 20 && fishMath < 25) {
+        return 6
+      }else if(fishMath > 25 && fishMath < 29) {
+        return 7
+      }else if(fishMath > 29 && fishMath < 32) {
+        return 8
+      }else if(fishMath > 33 && fishMath < 35) {
+        return 9
+      }else if(fishMath > 35 && fishMath < 37) {
+        return 10
+      }else if(fishMath > 37 && fishMath < 38) {
+        return 11
+      }else if(fishMath > 38 && fishMath < 39) {
+        return 12
+      } else {
+        return 6
+      }
+    },
     fishStart() {
       let direction = Math.random() > 0.5 ? 1 : -1
-      let fishNum = Math.floor(Math.random()*10)
+      let fishMath = Math.random() * 39
+      let fishNum = this.getFishNum(fishMath)
       // let fishNum = 9
       // console.log(fishNum)
       let fishWrapDom = document.getElementById('fish-wrap')
@@ -383,6 +423,7 @@ export default {
   position: absolute;
   background-size: 100% 100%;
   animation: boom .5s 1;
+  z-index: 200;
 }
 .bullet {
   width: .3rem;
@@ -394,6 +435,7 @@ export default {
   z-index: 0;
     // transform: translate3d(0, -200px, 0);
   transition: 2s linear;
+  z-index: 10;
 }
 .bullet-1 {
   background: url('../assets/images/bullet1.png') no-repeat;
@@ -430,7 +472,7 @@ export default {
   // background: black;
   position: absolute;
   bottom: .3rem;
-  left: 8.68rem;
+  left: 5.85rem;
   // position: absolute;
   // bottom: 0rem;
   // left: 0;

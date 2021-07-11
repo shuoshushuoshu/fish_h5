@@ -5,7 +5,7 @@
   "author": "",
   "private": true,
   "scripts": {
-    "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js --host 0.0.0.0",
+    "dev": "node --max_old_space_size=8096 node_modules/@vue/cli-service/bin/vue-cli-service.js serve --open",
     "start": "npm run dev",
     "unit": "jest --config test/unit/jest.conf.js --coverage",
     "e2e": "node test/e2e/runner.js",
@@ -14,6 +14,7 @@
     "build": "node build/build.js"
   },
   "dependencies": {
+    "@vue/cli-service": "^4.5.13",
     "axios": "^0.21.1",
     "vue": "^2.5.2",
     "vue-router": "^3.0.1"
