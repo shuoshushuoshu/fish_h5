@@ -151,13 +151,14 @@ export default {
       }, 500);
     },
     login() {
-      if(!this.username){
+      console.log(this.email, this.password)
+      if(!this.email){
         this.warnText = 'No username'
-        // return
+        return
       }
       if(!this.password) {
         this.warnText = 'No password'
-        // return
+        return
       }
       // setTimeout(() => {
       //   this.showWarn = true
@@ -166,7 +167,7 @@ export default {
       // this.showloading()
       let url = "/fishing/v1/login"
       let data = {
-        username: this.username,
+        username: this.email,
         password: this.password
       }
 
@@ -174,8 +175,8 @@ export default {
         this.toastType = ''
         this.loading = false
       }).catch(err =>{
-      this.toastType = ''
-        this.loading = false
+        // this.toastType = ''
+        // this.loading = false
 
       })
     },
