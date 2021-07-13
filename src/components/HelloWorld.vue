@@ -445,6 +445,7 @@ export default {
   display: flex;
   justify-content: center;
   padding-bottom: 1rem;
+  transform: translateZ(1000px);
   align-items: flex-end;
   z-index: 1000;
 }
@@ -567,7 +568,7 @@ export default {
     margin-bottom: .1rem;
     padding-left: .4rem !important;
     // background-color: ;
-    font-size: .11rem;
+    font-size: .32rem;
     font-family: Helvetica;
     color: #FFFFFF;
     line-height: .43rem;

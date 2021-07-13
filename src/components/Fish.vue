@@ -206,14 +206,19 @@ export default {
         let bulletX = bulletDom.getBoundingClientRect().top
         let bulletY = bulletDom.getBoundingClientRect().left
         this.fishDomlist.forEach(e => {
-          let fishX1 =  e.getBoundingClientRect().top + e.offsetWidth/2
+          let fishX4 =  e.getBoundingClientRect().top + (e.offsetWidth/4)*3
+          let fishX3 =  e.getBoundingClientRect().top + e.offsetWidth/2
           let fishX2 =  e.getBoundingClientRect().top + e.offsetWidth/4
-          let fishX3 =  e.getBoundingClientRect().top
+          let fishX1 =  e.getBoundingClientRect().top
           let fishY1=  e.getBoundingClientRect().left
-          let fishY2=  e.getBoundingClientRect().left + e.offsetHeight/4
-          let fishY3=  e.getBoundingClientRect().left + e.offsetHeigh/2
-          let fishY4=  e.getBoundingClientRect().left + (e.offsetHeigh/4)*3
-          let fishY5=  e.getBoundingClientRect().left + e.offsetHeigh
+          let fishY2=  e.getBoundingClientRect().left + (e.offsetHeight/8) * 1
+          let fishY3=  e.getBoundingClientRect().left + (e.offsetHeigh/8)*2
+          let fishY4=  e.getBoundingClientRect().left + (e.offsetHeigh/8)*3
+          let fishY5=  e.getBoundingClientRect().left + (e.offsetHeigh/8)*4
+          let fishY6=  e.getBoundingClientRect().left + (e.offsetHeigh/8)*5
+          let fishY7=  e.getBoundingClientRect().left + (e.offsetHeigh/8)*6
+          let fishY8=  e.getBoundingClientRect().left + (e.offsetHeigh/8)*7
+          let fishY9=  e.getBoundingClientRect().left + (e.offsetHeigh/8)*8
           let isHiton = false
           if(Math.abs(bulletX - fishX1) < 20 && Math.abs(bulletY - fishY3) < 20) {
             isHiton = true
@@ -237,6 +242,16 @@ export default {
             isHiton = true
           } else if(Math.abs(bulletX - fishX3) < 20 && Math.abs(bulletY - fishY4) < 20){
             isHiton = true
+          }else if(Math.abs(bulletX - fishX3) < 20 && Math.abs(bulletY - fishY5) < 20){
+            isHiton = true
+          }else if(Math.abs(bulletX - fishX3) < 20 && Math.abs(bulletY - fishY6) < 20){
+            isHiton = true
+          }else if(Math.abs(bulletX - fishX3) < 20 && Math.abs(bulletY - fishY7) < 20){
+            isHiton = true
+          }else if(Math.abs(bulletX - fishX3) < 20 && Math.abs(bulletY - fishY8) < 20){
+            isHiton = true
+          }else if(Math.abs(bulletX - fishX3) < 20 && Math.abs(bulletY - fishY9) < 20){
+            isHiton = true
           }
           // console.log(Math.abs(bulletX - fishX), Math.abs(bulletY - fishY))
           // console.log(bulletX , bulletY)
@@ -259,7 +274,7 @@ export default {
           }
         });
         // console.log(bulletDom.getBoundingClientRect().x,bulletDom.getBoundingClientRect().y)
-      }, 100);
+      }, 50);
       // const config = { attributes: true, childList: true, subtree: true };
       // const callback = (mutationsList, observer) => {
       //   let getBoundingClientRect = bulletDom.getBoundingClientRect()
@@ -329,6 +344,9 @@ export default {
       let fishStartY = Math.random() * fishDomHeight / 3
       fishDom.className = `fish fish-${fishNum} fishroate${direction}`
       // fishDom.className = 'fish fish-1'
+      if (direction === 1) {
+        fishDom.transform = 'rotate(180deg)'
+      }
       fishWrapDom.appendChild(fishDom)
       fishDom.style.bottom = fishStartY + 'px'
       try {
@@ -348,7 +366,7 @@ export default {
       }
       if (direction === 1) {
         fishDom.style.right = '0px'
-        // fishDom.classList.add('fish-rotate')
+        fishDom.classList.add('fish-rotate')
       } else {
         fishDom.style.left = '0px'
       }
@@ -388,7 +406,11 @@ export default {
 
     fishTranslate(fishDom,direction) {
       setTimeout(() => {
-        fishDom.style.transform = 'translate3d(' + -1000 *direction + 'px, 0px, 0)'
+        if(direction === 1) {
+          fishDom.style.transform = 'translate3d(' + -1000 *direction + 'px, 0px, 0) rotate(180deg)'
+        } else {
+          fishDom.style.transform = 'translate3d(' + -1000 *direction + 'px, 0px, 0)'
+        }
         fishDom.addEventListener('transitionend', function(){
           fishDom.remove()
         })
@@ -512,77 +534,66 @@ export default {
   // width: 1.1rem;
 }
 .fish-rotate {
+  transform: rotate(180deg);
   // animation: rotateFish 1s;
 }
 .fish-1 {
   background: url('../assets/images/fish1.png') no-repeat;
-  // height: .74rem;
   background-size: 100% auto !important;
   transition: transform 30s;
 }
 .fish-2 {
   background: url('../assets/images/fish2.png') no-repeat;
-  // height: .74rem;
   background-size: 100% auto !important;
   transition: transform 30s;
 }
 .fish-3 {
   background: url('../assets/images/fish3.png') no-repeat;
-  // height: .74rem;
   background-size: 100% auto !important;
   transition: transform 30s;
 }
 .fish-4 {
   background: url('../assets/images/fish4.png') no-repeat;
-  // height: .74rem;
   background-size: 100% auto !important;
   transition: transform 30s;
 }
 .fish-5 {
   background: url('../assets/images/fish5.png') no-repeat;
-  // height: .74rem;
   background-size: 100% auto !important;
   transition: transform 30s;
 }
 .fish-6 {
   background: url('../assets/images/fish6.png') no-repeat;
-  // height: .74rem;
   background-size: 100% auto !important;
   transition: transform 30s;
 }
 .fish-7 {
   background: url('../assets/images/fish7.png') no-repeat;
-  // height: .74rem;
   background-size: 100% auto !important;
   transition: transform 30s;
 }
 .fish-8 {
   background: url('../assets/images/fish8.png') no-repeat;
-  // height: .74rem;
   background-size: 100% auto !important;
   transition: transform 30s;
 }
 .fish-9 {
   background: url('../assets/images/fish9.png') no-repeat;
-  // height: .74rem;
   background-size: 100% auto !important;
   transition: transform 30s;
 }
 .fish-10 {
   background: url('../assets/images/fish10.png') no-repeat;
-  // height: .74rem;
   background-size: 100% auto !important;
   transition: transform 30s;
 }
 .fish-11 {
   background: url('../assets/images/fish11.png') no-repeat;
-  // height: .74rem;
   background-size: 100% auto !important;
   transition: transform 30s;
 }
 .fish-12 {
   background: url('../assets/images/fish12.png') no-repeat;
-  // height: .74rem;
   background-size: 100% auto !important;
   transition: transform 30s;
 }
