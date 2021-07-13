@@ -41,7 +41,7 @@
             <div class="rank-left">
               <div class="crown-img" v-if="index < 3" :class="index < 3 ? 'crown-' + parseInt(index+1) : ''" alt=""></div>
               <p v-else class="rank-index">{{index + 1}}</p>
-              <div class="rank-avatar"></div>
+              <img class="rank-avatar" :src="item.icon" />
               <p>{{item.name}}</p>
             </div>
             <div class="rank-right">
@@ -52,17 +52,17 @@
 
       </div>
       <div class="log-out" v-else>
-        <p @click="toastType = ''">Log out</p>
+        <p @click="logout">Log out</p>
         <div class="cancel-btn" @click="toastType = ''">Cancel</div>
       </div>
     </div>
     <Fish @changeScore="changeScore" v-if="gameStart" :cannonType="cannonType" />
-    <div class="gameStart-btn" v-else-if="!gameStart && !toastType" @click="gameStart = true">Start</div>
+    <div class="gameStart-btn" v-else-if="!gameStart && !toastType" @click="gameOpen">Start</div>
     <div class="rankBtn" @click="showRankList">
       <p>排行榜</p>
     </div>
-    <div class="userInfoBtn" @click="showLogout">
-      <img src="" alt="">
+    <div class="userInfoBtn" :style="{background: `url('${userInfo.icon}') no-repeat `, backgroundSize: '100% 100%'}" @click="showLogout">
+      <img src="../assets/icons/avatar_border.png" alt="">
     </div>
   </div>
 </template>
@@ -89,13 +89,19 @@ export default {
       pageSize: 10,
       rankList: [],
       warnText:'',
+      userInfo: {}
     }
   },
-
+  
   mounted() {
     this.resizeUI()
     this.getRankList()
     // this.login()
+    if(localStorage.getItem('USER_INFO')) {
+      this.toastType = ''
+      this.loading = false
+      this.userInfo = JSON.parse(localStorage.getItem('USER_INFO'))
+    }
   },
   computed: {
     userScoreString() {
@@ -106,6 +112,30 @@ export default {
     }
   },
   methods: {
+    gameOpen() {
+      this.gameStart = true
+      let startTime = Date.parse(new Date())
+      setInterval(() => {
+        let url = `/v1/game`
+        let endTime = Date.parse(new Date())
+        let data = {
+          gameId: this.userInfo.userId,
+          gamePoints: this.userScore,
+          startTime:startTime,
+          endTime: endTime
+        }
+        this.$axios.put(url, {
+          params:data
+        }).then(res=>{
+          this.rankList.push(...res.data.list)
+          
+        })
+      }, 1000 * 30);
+    },
+    logout() {
+      localStorage.setItem('USER_INFO','')
+      this.userInfo = {}
+    },
     listScroll(e) {
       if(this.rankList.length%10 !== 0) return
 
@@ -116,7 +146,7 @@ export default {
       }
     },
     getRankList() {
-      let url = '/fishing/v1/game/rank'
+      let url = "/fishing/v1/game/rank"
       let data = {
         pageNo: this.pageIndex,
         pageSize:this.pageSize
@@ -151,7 +181,7 @@ export default {
       }, 500);
     },
     login() {
-      console.log(this.email, this.password)
+      // console.log(this.email, this.password)
       if(!this.email){
         this.warnText = 'No username'
         return
@@ -167,17 +197,19 @@ export default {
       // this.showloading()
       let url = "/fishing/v1/login"
       let data = {
-        username: this.email,
-        password: this.password
+        username: 'mockuser',
+        password: 123
       }
 
       this.$axios.post(url, data).then(res=>{
         this.toastType = ''
         this.loading = false
+        this.userInfo = res.data.data
+        localStorage.setItem('USER_INFO',JSON.stringify(this.userInfo))
       }).catch(err =>{
         // this.toastType = ''
         // this.loading = false
-
+        this.warnText = 'userName or password error'
       })
     },
     numfix(num, length) {
@@ -460,10 +492,9 @@ export default {
   }
 }
 .userInfoBtn {
-  width: .6rem;
-  height: .6rem;
+  width: .7rem;
+  height: .7rem;
   border-radius: 100%;
-  background: white;
   color: black;
   position: fixed;
   line-height: .6rem;
@@ -472,8 +503,15 @@ export default {
   font-size: .2rem;
   text-align: center;
   z-index: 200;
-  background: url('../assets/icons/avatar_border.png') no-repeat;
-  background-size: 100% 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-size: 100% 100% !important;
+  img {
+    width: .8rem;
+    height: .8rem;
+    border-radius: 100%;
+  }
 }
 .login-wrap {
   width: 7.1rem;
