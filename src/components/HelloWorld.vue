@@ -96,12 +96,8 @@ export default {
   mounted() {
     this.resizeUI()
     this.getRankList()
+      this.getUserInfo()
     // this.login()
-    if(localStorage.getItem('USER_INFO')) {
-      this.toastType = ''
-      this.loading = false
-      this.userInfo = JSON.parse(localStorage.getItem('USER_INFO'))
-    }
   },
   computed: {
     userScoreString() {
@@ -112,11 +108,23 @@ export default {
     }
   },
   methods: {
+    getUserInfo() {
+      if(document.cookie) {
+        let url = "/fishing/v1/info"
+        this.$axios.get(url).then(res=>{
+          this.userInfo = res.data.data
+          this.toastType = ''
+          this.loading = false
+        }).catch(err=>{
+          this.toastType = 'gameStart'
+        })
+      }
+    },
     gameOpen() {
       this.gameStart = true
       let startTime = Date.parse(new Date())
       setInterval(() => {
-        let url = `/v1/game`
+        let url = `/v1/game/${this.userInfo.userId}`
         let endTime = Date.parse(new Date())
         let data = {
           gameId: this.userInfo.userId,
@@ -124,17 +132,20 @@ export default {
           startTime:startTime,
           endTime: endTime
         }
-        this.$axios.put(url, {
-          params:data
-        }).then(res=>{
+        this.$axios.put(url, data).then(res=>{
           this.rankList.push(...res.data.list)
           
         })
-      }, 1000 * 30);
+      }, 1000 * 5);
     },
     logout() {
-      localStorage.setItem('USER_INFO','')
-      this.userInfo = {}
+      let url = "/fishing/v1/logout"
+      this.$axios.get(url).then(res=>{
+        this.userInfo = {}
+        this.toastType = 'gameStart'
+        location.reload()
+      }).catch(err=>{
+      })
     },
     listScroll(e) {
       if(this.rankList.length%10 !== 0) return
@@ -181,7 +192,6 @@ export default {
       }, 500);
     },
     login() {
-      // console.log(this.email, this.password)
       if(!this.email){
         this.warnText = 'No username'
         return
@@ -190,22 +200,16 @@ export default {
         this.warnText = 'No password'
         return
       }
-      // setTimeout(() => {
-      //   this.showWarn = true
-      //   this.warnText = ''
-      // }, 2000);
-      // this.showloading()
       let url = "/fishing/v1/login"
       let data = {
-        username: 'mockuser',
-        password: 123
+        username: this.email,
+        password: this.password
       }
 
       this.$axios.post(url, data).then(res=>{
         this.toastType = ''
         this.loading = false
         this.userInfo = res.data.data
-        localStorage.setItem('USER_INFO',JSON.stringify(this.userInfo))
       }).catch(err =>{
         // this.toastType = ''
         // this.loading = false

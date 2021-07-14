@@ -206,12 +206,17 @@ export default {
         let bulletX = bulletDom.getBoundingClientRect().top
         let bulletY = bulletDom.getBoundingClientRect().left
         this.fishDomlist.forEach(e => {
-          let fishX4 =  e.getBoundingClientRect().top + (e.offsetWidth/4)*3
-          let fishX3 =  e.getBoundingClientRect().top + e.offsetWidth/2
-          let fishX2 =  e.getBoundingClientRect().top + e.offsetWidth/4
+          let fishX9 =  e.getBoundingClientRect().top + (e.offsetWidth/8)*8
+          let fishX8 =  e.getBoundingClientRect().top + (e.offsetWidth/8)*7
+          let fishX7 =  e.getBoundingClientRect().top + (e.offsetWidth/8)*6
+          let fishX6 =  e.getBoundingClientRect().top + (e.offsetWidth/8)*5
+          let fishX5 =  e.getBoundingClientRect().top + (e.offsetWidth/8)*4
+          let fishX4 =  e.getBoundingClientRect().top + (e.offsetWidth/8)*3
+          let fishX3 =  e.getBoundingClientRect().top + (e.offsetWidth/8)*2
+          let fishX2 =  e.getBoundingClientRect().top + (e.offsetWidth/8)*1
           let fishX1 =  e.getBoundingClientRect().top
           let fishY1=  e.getBoundingClientRect().left
-          let fishY2=  e.getBoundingClientRect().left + (e.offsetHeight/8) * 1
+          let fishY2=  e.getBoundingClientRect().left + (e.offsetHeight/8)*1
           let fishY3=  e.getBoundingClientRect().left + (e.offsetHeigh/8)*2
           let fishY4=  e.getBoundingClientRect().left + (e.offsetHeigh/8)*3
           let fishY5=  e.getBoundingClientRect().left + (e.offsetHeigh/8)*4
@@ -220,37 +225,55 @@ export default {
           let fishY8=  e.getBoundingClientRect().left + (e.offsetHeigh/8)*7
           let fishY9=  e.getBoundingClientRect().left + (e.offsetHeigh/8)*8
           let isHiton = false
-          if(Math.abs(bulletX - fishX1) < 20 && Math.abs(bulletY - fishY3) < 20) {
+          if(Math.abs(bulletX - fishX2 < 20) && Math.abs(bulletY - fishY3) < 20) {
             isHiton = true
-          } else if(Math.abs(bulletX - fishX1) < 20 && Math.abs(bulletY - fishY2) < 20) {
+          } else if(Math.abs(bulletX - fishX2) < 20 && Math.abs(bulletY - fishY5) < 20) {
             isHiton = true
-          } else if(Math.abs(bulletX - fishX1) < 20 && Math.abs(bulletY - fishY4) < 20){
+          } else if(Math.abs(bulletX - fishX2) < 20 && Math.abs(bulletY - fishY7) < 20){
             isHiton = true
-          } else if(Math.abs(bulletX - fishX2) < 20 && Math.abs(bulletY - fishY1) < 20){
+          } else if(Math.abs(bulletX - fishX4) < 20 && Math.abs(bulletY - fishY2) < 20){
             isHiton = true
-          } else if(Math.abs(bulletX - fishX2) < 20 && Math.abs(bulletY - fishY2) < 20){
+          } else if(Math.abs(bulletX - fishX4) < 20 && Math.abs(bulletY - fishY4) < 20){
             isHiton = true
-          } else if(Math.abs(bulletX - fishX2) < 20 && Math.abs(bulletY - fishY3) < 20){
+          } else if(Math.abs(bulletX - fishX4) < 20 && Math.abs(bulletY - fishY6) < 20){
             isHiton = true
-          } else if(Math.abs(bulletX - fishX2) < 20 && Math.abs(bulletY - fishY4) < 20){
+          } else if(Math.abs(bulletX - fishX4) < 20 && Math.abs(bulletY - fishY7) < 20){
             isHiton = true
-          } else if(Math.abs(bulletX - fishX2) < 20 && Math.abs(bulletY - fishY5) < 20){
+          } else if(Math.abs(bulletX - fishX4) < 20 && Math.abs(bulletY - fishY8) < 20){
             isHiton = true
-          } else if(Math.abs(bulletX - fishX3) < 20 && Math.abs(bulletY - fishY3) < 20){
+          } else if(Math.abs(bulletX - fishX6) < 20 && Math.abs(bulletY - fishY1) < 20){
             isHiton = true
-          } else if(Math.abs(bulletX - fishX3) < 20 && Math.abs(bulletY - fishY2) < 20){
+          } else if(Math.abs(bulletX - fishX6) < 20 && Math.abs(bulletY - fishY2) < 20){
             isHiton = true
-          } else if(Math.abs(bulletX - fishX3) < 20 && Math.abs(bulletY - fishY4) < 20){
+          } else if(Math.abs(bulletX - fishX6) < 20 && Math.abs(bulletY - fishY3) < 20){
             isHiton = true
-          }else if(Math.abs(bulletX - fishX3) < 20 && Math.abs(bulletY - fishY5) < 20){
+          }else if(Math.abs(bulletX - fishX6) < 20 && Math.abs(bulletY - fishY4) < 20){
             isHiton = true
-          }else if(Math.abs(bulletX - fishX3) < 20 && Math.abs(bulletY - fishY6) < 20){
+          }else if(Math.abs(bulletX - fishX6) < 20 && Math.abs(bulletY - fishY5) < 20){
             isHiton = true
-          }else if(Math.abs(bulletX - fishX3) < 20 && Math.abs(bulletY - fishY7) < 20){
+          }else if(Math.abs(bulletX - fishX6) < 20 && Math.abs(bulletY - fishY6) < 20){
             isHiton = true
-          }else if(Math.abs(bulletX - fishX3) < 20 && Math.abs(bulletY - fishY8) < 20){
+          }else if(Math.abs(bulletX - fishX6) < 20 && Math.abs(bulletY - fishY7) < 20){
             isHiton = true
-          }else if(Math.abs(bulletX - fishX3) < 20 && Math.abs(bulletY - fishY9) < 20){
+          }else if(Math.abs(bulletX - fishX6) < 20 && Math.abs(bulletY - fishY8) < 20){
+            isHiton = true
+          }else if(Math.abs(bulletX - fishX2) < 20 && Math.abs(bulletY - fishY2) < 20){
+            isHiton = true
+          }else if(Math.abs(bulletX - fishX4) < 20 && Math.abs(bulletY - fishY2) < 20){
+            isHiton = true
+          }else if(Math.abs(bulletX - fishX6) < 20 && Math.abs(bulletY - fishY2) < 20){
+            isHiton = true
+          }else if(Math.abs(bulletX - fishX8) < 20 && Math.abs(bulletY - fishY2) < 20){
+            isHiton = true
+          }else if(Math.abs(bulletX - fishX2) < 20 && Math.abs(bulletY - fishY8) < 20){
+            isHiton = true
+          }else if(Math.abs(bulletX - fishX4) < 20 && Math.abs(bulletY - fishY8) < 20){
+            isHiton = true
+          } else if(Math.abs(bulletX - fishX6) < 20 && Math.abs(bulletY - fishY8) < 20){
+            isHiton = true
+          } else if(Math.abs(bulletX - fishX8) < 20 && Math.abs(bulletY - fishY8) < 20){
+            isHiton = true
+          } else if(Math.abs(bulletX - fishX9) < 20 && Math.abs(bulletY - fishY8) < 20){
             isHiton = true
           }
           // console.log(Math.abs(bulletX - fishX), Math.abs(bulletY - fishY))
@@ -314,9 +337,9 @@ export default {
         return 4
       }else if(fishMath > 16 && fishMath < 20) {
         return 5
-      }else if(fishMath > 20 && fishMath < 25) {
+      }else if(fishMath > 20 && fishMath < 27) {
         return 6
-      }else if(fishMath > 25 && fishMath < 29) {
+      }else if(fishMath > 27 && fishMath < 29) {
         return 7
       }else if(fishMath > 29 && fishMath < 32) {
         return 8

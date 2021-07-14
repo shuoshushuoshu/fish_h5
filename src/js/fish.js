@@ -2,8 +2,8 @@ export function getFishList() {
   return [
     {
       id: 1,
-      width: 1.1 * 1,
-      height: .74 * 1,
+      width: 1.1 * 1.2,
+      height: .74 * 1.2,
       score: 2,
       speed:1,
       chance: 1,
@@ -17,29 +17,29 @@ export function getFishList() {
     },
     {
       id: 3,
-      height: .86 * 1.2,
-      width: 1.1 * 1.2,
+      height: .86 * 1.4,
+      width: 1.1 * 1.4,
       score: 6,
       chance: 0.8,
     },
     {
       id: 4,
-      height: .85 * 1.2,
-      width: 1.1 * 1.2,
+      height: .85 * 1.4,
+      width: 1.1 * 1.4,
       score: 8,
       chance: .7,
     },
     {
       id: 5,
-      height: 1.26 * 1.4,
-      width: 1.1 * 1.4,
+      height: 1.26 * 1.6,
+      width: 1.1 * 1.6,
       score: 10,
       chance: .6,
     },
     {
       id: 6,
-      height: .83 * 1.4,
-      width: 1.1 * 1.4,
+      height: .83 * 1.8,
+      width: 1.1 * 1.8,
       score: 10,
       chance: .5
     },
@@ -53,8 +53,8 @@ export function getFishList() {
 
     {
       id: 8,
-      height: .8 * 1.6,
-      width: 1.1 * 1.6,
+      height: .8 * 2.2,
+      width: 1.1 * 2.2,
       score: 20,
       chance: .4,
     },
