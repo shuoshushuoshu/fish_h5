@@ -96,7 +96,7 @@ export default {
   mounted() {
     this.resizeUI()
     this.getRankList()
-      this.getUserInfo()
+    this.getUserInfo()
     // this.login()
   },
   computed: {
@@ -110,7 +110,7 @@ export default {
   methods: {
     getUserInfo() {
       if(document.cookie) {
-        let url = "/fishing/v1/info"
+        let url = "/fishing/v1/user/current"
         this.$axios.get(url).then(res=>{
           this.userInfo = res.data.data
           this.toastType = ''
@@ -118,28 +118,27 @@ export default {
         }).catch(err=>{
           this.toastType = 'gameStart'
         })
+      } else {
+        this.toastType = 'gameStart'
       }
     },
     gameOpen() {
       this.gameStart = true
       let startTime = Date.parse(new Date())
       setInterval(() => {
-        let url = `/v1/game/${this.userInfo.userId}`
+        let url = `/fishing/v1/game/${this.userInfo.userId}`
         let endTime = Date.parse(new Date())
-        let data = {
-          gameId: this.userInfo.userId,
-          gamePoints: this.userScore,
-          startTime:startTime,
-          endTime: endTime
-        }
-        this.$axios.put(url, data).then(res=>{
-          this.rankList.push(...res.data.list)
-          
+        let data = JSON.stringify({
+          'gameId': this.userInfo.userId,
+          'gamePoints': this.userScore,
+          'startTime':startTime,
+          'endTime': endTime
         })
+        this.$axios.put(url, data)
       }, 1000 * 5);
     },
     logout() {
-      let url = "/fishing/v1/logout"
+      let url = "/fishing/logout"
       this.$axios.get(url).then(res=>{
         this.userInfo = {}
         this.toastType = 'gameStart'

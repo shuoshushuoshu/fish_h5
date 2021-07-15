@@ -1,43 +1,29 @@
-import axios from "axios"
+import axios from  'axios'
+///request拦截器
+axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
+axios.defaults.headers.get['Content-Type'] = 'application/x-www-form-urlencoded';
+axios.defaults.headers.put['Content-Type'] = 'application/json';
+axios.defaults.headers.put['Access-Control-Allow-Origin'] = '*';
+axios.defaults.headers.put['Access-Control-Allow-Methods'] = '*';
+axios.defaults.headers.put['Access-Control-Allow-Headers'] = 'Content-Type,XFILENAME,XFILECATEGORY,XFILESIZE';
 
-export default function AXIOS_POST (url, options) {
-  return new Promise((resolve,reject)=>{
-    axios({
-      method:"post",
-      url:url,
-      headers:{
-       'Content-type': 'application/x-www-form-urlencoded'
-      },
-      data:options,
-      transformRequest: [function (data) {
-       let ret = ''
-       for (let it in data) {
-        ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
-       }
-       return ret
-       }],
-     }).then(res=>{
-       resolve(res)
-     }).catch(err =>{
-       reject(err)
-     })
-  })
+axios.interceptors.request.use(req  =>  {
+  if(req.method === 'get' || req.method === 'post') {
+    // axios.defaults.transformRequest = [function (data) {
+    //   let ret = ''
+    //   for (let it in data) {
+    //     ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
+    //   }
+    //   return ret
+    // }]
+  } else if(req.method === 'put') {
+    // axios.defaults.transformRequest = 111
+    // axios.defaults.transformRequest = [function (data) {
+    //   return {ss:'ss'}
+    // }]
+  }
 
-}
-
-// export default function AXIOS_GET (url, data) {
-//   return new Promise((resolve,reject)=>{
-//     axios({
-//     method:"get",
-//     url:url,
-//     headers:{
-//      'Content-type': 'application/x-www-form-urlencoded'
-//     },
-//     data: data,
-//     }).then(res=>{
-//       resolve(res)
-//     }).catch(err=>{
-//       reject(err)
-//     })
-//   })
-// }
+  return req;
+}, error =>  {
+    return Promise.reject(error);
+})
