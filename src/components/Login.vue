@@ -158,7 +158,7 @@ export default {
     margin-bottom: .1rem;
     padding-left: .6rem !important;
     // background-color: ;
-    font-size: .2rem;
+    font-size: .32rem;
     font-family: Helvetica;
     color: #FFFFFF;
     line-height: .43rem;

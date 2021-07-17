@@ -8,7 +8,7 @@
       <div class="sub-btn" @click="subCannon"></div>
       <div class="bottom-score">{{userScoreString}}</div>
     </div>
-    <div class="game-before-wrap" v-if="toastType">
+    <!-- <div class="game-before-wrap" v-if="toastType">
       <div class="login-wrap" v-if="toastType === 'gameStart'">
         <p class="login-text">Sign in</p>
         <div class="email">
@@ -55,7 +55,7 @@
         <p @click="logout">Log out</p>
         <div class="cancel-btn" @click="toastType = ''">Cancel</div>
       </div>
-    </div>
+    </div> -->
     <Fish @changeScore="changeScore" v-if="gameStart" :cannonType="cannonType" />
     <div class="gameStart-btn" v-else-if="!gameStart && !toastType" @click="gameOpen">Start</div>
     <div class="rankBtn" @click="showRankList">
@@ -276,15 +276,6 @@ export default {
     line-height: 1rem;
     font-size: .3rem;
   }
-}
-.warn-line {
-  height: .4rem;
-  width: 2rem;
-  font-size: .24rem;
-  color: red;
-  position: relative;
-  right: .7rem;
-  bottom: .1rem;
 }
 .gameStart-btn {
   width:2rem;
