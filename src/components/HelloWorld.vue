@@ -68,7 +68,6 @@
 </template>
 
 <script>
-import axios from "axios"
 import Fish from './Fish.vue'
 export default {
   name: 'HelloWorld',
@@ -79,7 +78,7 @@ export default {
     return {
       gameStart: false,
       userScore: 200,
-      toastType: 'gameStart',
+      toastType: '',
       password: '',
       email: '',
       loading: false,
@@ -108,18 +107,23 @@ export default {
     }
   },
   methods: {
+    transformData(data) {
+      let ret = ''
+      for (let it in data) {
+        ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
+      }
+      return ret
+    },
     getUserInfo() {
       if(document.cookie) {
         let url = "/fishing/v1/user/current"
         this.$axios.get(url).then(res=>{
           this.userInfo = res.data.data
-          this.toastType = ''
-          this.loading = false
         }).catch(err=>{
-          this.toastType = 'gameStart'
+          this.$router.push({path:'/', replace: true})
         })
       } else {
-        this.toastType = 'gameStart'
+        // this.toastType = 'gameStart'
       }
     },
     gameOpen() {
@@ -139,9 +143,9 @@ export default {
     },
     logout() {
       let url = "/fishing/logout"
-      this.$axios.get(url).then(res=>{
+      this.$axios.post(url).then(res=>{
         this.userInfo = {}
-        this.toastType = 'gameStart'
+        this.$router.push({path:'/', replace: true})
         location.reload()
       }).catch(err=>{
       })
@@ -190,31 +194,7 @@ export default {
         
       }, 500);
     },
-    login() {
-      if(!this.email){
-        this.warnText = 'No username'
-        return
-      }
-      if(!this.password) {
-        this.warnText = 'No password'
-        return
-      }
-      let url = "/fishing/v1/login"
-      let data = {
-        username: this.email,
-        password: this.password
-      }
 
-      this.$axios.post(url, data).then(res=>{
-        this.toastType = ''
-        this.loading = false
-        this.userInfo = res.data.data
-      }).catch(err =>{
-        // this.toastType = ''
-        // this.loading = false
-        this.warnText = 'userName or password error'
-      })
-    },
     numfix(num, length) {
       return ('' + num).length < length ? ((new Array(length + 1)).join('0') + num).slice(-length) : '' + num;
     },

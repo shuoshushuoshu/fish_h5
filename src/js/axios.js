@@ -9,17 +9,17 @@ axios.defaults.headers.put['Access-Control-Allow-Headers'] = 'Content-Type,XFILE
 
 axios.interceptors.request.use(req  =>  {
   if(req.method === 'get' || req.method === 'post') {
+    axios.defaults.transformRequest = [function (data) {
+      let ret = ''
+      for (let it in data) {
+        ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
+      }
+      return ret
+    }]
+  } 
+  else if(req.method === 'put') {
     // axios.defaults.transformRequest = [function (data) {
-    //   let ret = ''
-    //   for (let it in data) {
-    //     ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
-    //   }
-    //   return ret
-    // }]
-  } else if(req.method === 'put') {
-    // axios.defaults.transformRequest = 111
-    // axios.defaults.transformRequest = [function (data) {
-    //   return {ss:'ss'}
+    //   return data
     // }]
   }
 
