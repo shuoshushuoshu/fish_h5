@@ -18,9 +18,9 @@ axios.interceptors.request.use(req  =>  {
     }]
   } 
   else if(req.method === 'put') {
-    // axios.defaults.transformRequest = [function (data) {
-    //   return data
-    // }]
+    axios.defaults.transformRequest = function (data) {
+      return JSON.parse(JSON.stringify(data))
+    }
   }
 
   return req;

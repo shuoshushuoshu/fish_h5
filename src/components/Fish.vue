@@ -329,21 +329,21 @@ export default {
     getFishNum(fishMath) {
       if(fishMath > 0 && fishMath < 4) {
         return 1
-      } else if(fishMath > 0 && fishMath < 5) {
+      } else if(fishMath >4 && fishMath < 8) {
         return 2
-      }else if(fishMath > 5 && fishMath < 10) {
+      }else if(fishMath > 8 && fishMath < 12) {
         return 3
-      }else if(fishMath > 10 && fishMath < 16) {
+      }else if(fishMath > 12 && fishMath < 19) {
         return 4
-      }else if(fishMath > 16 && fishMath < 20) {
+      }else if(fishMath > 19 && fishMath < 25) {
         return 5
-      }else if(fishMath > 20 && fishMath < 27) {
+      }else if(fishMath > 25 && fishMath < 30) {
         return 6
-      }else if(fishMath > 27 && fishMath < 29) {
+      }else if(fishMath > 30 && fishMath < 30) {
         return 7
-      }else if(fishMath > 29 && fishMath < 32) {
+      }else if(fishMath > 30 && fishMath < 35) {
         return 8
-      }else if(fishMath > 33 && fishMath < 35) {
+      }else if(fishMath > 35 && fishMath < 35) {
         return 9
       }else if(fishMath > 35 && fishMath < 37) {
         return 10
