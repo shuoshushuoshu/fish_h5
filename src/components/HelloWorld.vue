@@ -57,7 +57,7 @@
       </div>
     </div>
     <Fish @changeScore="changeScore" v-if="gameStart" :cannonType="cannonType" />
-    <div class="gameStart-btn" v-else-if="!gameStart && !toastType" @click="gameOpen">Start</div>
+    <!-- <div class="gameStart-btn" v-else-if="!gameStart && !toastType" @click="gameOpen">Start</div> -->
     <div class="rankBtn" @click="showRankList">
       <p>排行榜</p>
     </div>
@@ -95,7 +95,7 @@ export default {
   mounted() {
     this.resizeUI()
     this.getRankList()
-    // this.login()
+    this.gameOpen()
   },
   computed: {
     userScoreString() {
