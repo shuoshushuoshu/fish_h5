@@ -1,12 +1,46 @@
 <template>
   <div id="app">
-    <router-view />
+    <Login v-if="showLogin" @changeShowLogin="changeLogin" />
+    <HelloWorld v-else @changeShowLogin="changeLogin" />
   </div>
 </template>
 
 <script>
+import Login from './components/Login.vue'
+import HelloWorld from './components/HelloWorld.vue'
 export default {
   name: 'App',
+  components: {
+    Login,
+    HelloWorld
+  },
+  data() {
+    return {
+      showLogin: false
+    }
+  },
+  created() {
+    this.getUserInfo()
+  },
+  methods: {
+    changeLogin(show) {
+      this.showLogin = show
+    },
+    getUserInfo() {
+      if(document.cookie) {
+        let url = "/fishing/v1/user/current"
+        this.$axios.get(url).then(res=>{
+          // this.$router.push({path:'/',replace: true})
+          this.showLogin = false
+        }).catch(err=>{
+          this.showLogin = true
+        })
+      } else {
+          this.showLogin = true
+        // this.$router.push({path:'/',replace: true})
+      }
+    },
+  },
   mounted() {
     window.onload = function() {
       document.body.addEventListener('touchstart',function (event) {

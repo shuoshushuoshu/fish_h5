@@ -26,11 +26,10 @@ export default {
       email: '',
       password: '',
       warnText: '',
-      showPage: false,
+      showPage: true,
     }
   },
   created() {
-    this.getUserInfo()
   },
   methods: {
     transformData(data) {
@@ -40,19 +39,7 @@ export default {
       }
       return [ret]
     },
-    getUserInfo() {
-      if(document.cookie) {
-        let url = "/fishing/v1/user/current"
-        this.$axios.get(url).then(res=>{
-          this.showPage = true
-          this.$router.push({path:'/game',replace: true})
-        }).catch(err=>{
-          this.showPage = true
-        })
-      } else {
-        this.$router.push({path:'/game',replace: true})
-      }
-    },
+
     login() {
       if(!this.email){
         this.warnText = 'No username'
@@ -68,8 +55,9 @@ export default {
         password: this.password
       }
       this.$axios.post(url, data).then(res=>{
-        this.$router.push({path:'/game',replace: true})
+        this.$emit('changeShowLogin',false)
       }).catch(err =>{
+        this.$emit('changeShowLogin',false)
         this.warnText = 'userName or password error'
       })
     },

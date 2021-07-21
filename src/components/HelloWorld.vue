@@ -8,7 +8,7 @@
       <div class="sub-btn" @click="subCannon"></div>
       <div class="bottom-score">{{userScoreString}}</div>
     </div>
-    <!-- <div class="game-before-wrap" v-if="toastType">
+    <div class="game-before-wrap" v-if="toastType">
       <div class="login-wrap" v-if="toastType === 'gameStart'">
         <p class="login-text">Sign in</p>
         <div class="email">
@@ -55,7 +55,7 @@
         <p @click="logout">Log out</p>
         <div class="cancel-btn" @click="toastType = ''">Cancel</div>
       </div>
-    </div> -->
+    </div>
     <Fish @changeScore="changeScore" v-if="gameStart" :cannonType="cannonType" />
     <div class="gameStart-btn" v-else-if="!gameStart && !toastType" @click="gameOpen">Start</div>
     <div class="rankBtn" @click="showRankList">
@@ -95,7 +95,6 @@ export default {
   mounted() {
     this.resizeUI()
     this.getRankList()
-    this.getUserInfo()
     // this.login()
   },
   computed: {
@@ -120,10 +119,10 @@ export default {
         this.$axios.get(url).then(res=>{
           this.userInfo = res.data.data
         }).catch(err=>{
-          this.$router.push({path:'/', replace: true})
+          this.$emit('changeShowLogin', true)
         })
       } else {
-        // this.toastType = 'gameStart'
+         this.$emit('changeShowLogin', true)
       }
     },
     gameOpen() {
@@ -145,7 +144,7 @@ export default {
       let url = "/fishing/logout"
       this.$axios.post(url).then(res=>{
         this.userInfo = {}
-        this.$router.push({path:'/', replace: true})
+        this.$emit('changeShowLogin', true)
         location.reload()
       }).catch(err=>{
       })
@@ -488,76 +487,76 @@ export default {
     border-radius: 100%;
   }
 }
-.login-wrap {
-  width: 7.1rem;
-  height: 4.6rem;
-  background: rgba(255,255,255,1);
-  // border-radius: .4rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  background: url('../assets/icons/login-back.png') no-repeat;
-  background-size: 100% 100%;
-  .login-text {
-    font-size: .3rem;
-    font-family: Helvetica;
-    color: #B6A159;
-    line-height: .36rem;
-    width: 3.6rem;
-    height: .36rem;
-    text-align: left;
-  }
-  .login-bottom {
-    font-size: .12rem;
-    font-family: Helvetica;
-    color: #FFFFFF;
-    line-height: .14rem;
-    position: relative;
-    left: .5rem
-  }
-  p {
-    font-size: .18rem;
-    height: .3rem;
-    line-height: .3rem;
-    margin-bottom: .2rem;
-    text-align: center;
-    font-weight: 500;
+// .login-wrap {
+//   width: 7.1rem;
+//   height: 4.6rem;
+//   background: rgba(255,255,255,1);
+//   // border-radius: .4rem;
+//   display: flex;
+//   flex-direction: column;
+//   justify-content: center;
+//   align-items: center;
+//   background: url('../assets/icons/login-back.png') no-repeat;
+//   background-size: 100% 100%;
+//   .login-text {
+//     font-size: .3rem;
+//     font-family: Helvetica;
+//     color: #B6A159;
+//     line-height: .36rem;
+//     width: 3.6rem;
+//     height: .36rem;
+//     text-align: left;
+//   }
+//   .login-bottom {
+//     font-size: .12rem;
+//     font-family: Helvetica;
+//     color: #FFFFFF;
+//     line-height: .14rem;
+//     position: relative;
+//     left: .5rem
+//   }
+//   p {
+//     font-size: .18rem;
+//     height: .3rem;
+//     line-height: .3rem;
+//     margin-bottom: .2rem;
+//     text-align: center;
+//     font-weight: 500;
 
-  }
-}
-.email, .password {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
-  width: 3.6rem;
-  height: .43rem;
-  flex-shrink: 0;
-  margin-bottom: .1rem;
-  position: relative;
-  input {
-    width: 100%;
-    height: 100%;
-    margin-bottom: .1rem;
-    padding-left: .4rem !important;
-    // background-color: ;
-    font-size: .32rem;
-    font-family: Helvetica;
-    color: #FFFFFF;
-    line-height: .43rem;
-    background: linear-gradient(270deg, rgba(182, 161, 89, 0) 0%, rgba(182, 161, 89, 0.3) 100%) !important;
-    flex-shrink: 0;
-  }
-  img {
-    position: absolute;
-    flex-shrink: 0;
-    width: .2rem;
-    height: .2rem;
-    bottom: .2rem;
-    left: .1rem;
-  }
-}
+//   }
+// }
+// .email, .password {
+//   display: flex;
+//   flex-direction: column;
+//   justify-content: center;
+//   align-items: flex-start;
+//   width: 3.6rem;
+//   height: .43rem;
+//   flex-shrink: 0;
+//   margin-bottom: .1rem;
+//   position: relative;
+//   input {
+//     width: 100%;
+//     height: 100%;
+//     margin-bottom: .1rem;
+//     padding-left: .4rem !important;
+//     // background-color: ;
+//     font-size: .32rem;
+//     font-family: Helvetica;
+//     color: #FFFFFF;
+//     line-height: .43rem;
+//     background: linear-gradient(270deg, rgba(182, 161, 89, 0) 0%, rgba(182, 161, 89, 0.3) 100%) !important;
+//     flex-shrink: 0;
+//   }
+//   img {
+//     position: absolute;
+//     flex-shrink: 0;
+//     width: .2rem;
+//     height: .2rem;
+//     bottom: .2rem;
+//     left: .1rem;
+//   }
+// }
 .bottom-score {
   font-size: .3rem;
   font-family: PingFangSC-Semibold, PingFang SC;
