@@ -20,6 +20,7 @@
 </template>
 
 <script>
+import axios from 'axios'
 export default {
   data() {
     return {
@@ -54,10 +55,27 @@ export default {
         username: this.email,
         password: this.password
       }
-      this.$axios.post(url, data).then(res=>{
+      axios({
+        method: 'post',
+        url: url,
+        data: data,
+        transformRequest: [
+            function (data) {
+              let ret = ''
+              for (let it in data) {
+                  ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
+              }
+              ret = ret.substring(0, ret.lastIndexOf('&'));
+              return ret
+            }
+          ],
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+          }
+      }).then(res=>{
         this.$emit('changeShowLogin',false)
       }).catch(err =>{
-        this.$emit('changeShowLogin',false)
+        // this.$emit('changeShowLogin',false)
         this.warnText = 'userName or password error'
       })
     },

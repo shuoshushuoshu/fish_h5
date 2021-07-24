@@ -37,17 +37,20 @@
           ×
         </div>
         <div class="rank-list" @scroll="listScroll">
+          <div class="rank-list-wrap">
           <div class="rank-item" v-for="(item,index) in rankList" :key="index">
             <div class="rank-left">
               <div class="crown-img" v-if="index < 3" :class="index < 3 ? 'crown-' + parseInt(index+1) : ''" alt=""></div>
               <p v-else class="rank-index">{{index + 1}}</p>
-              <img class="rank-avatar" :src="item.icon" />
-              <p>{{item.name}}</p>
+              <img class="rank-avatar" :src="item.avatar" />
+              <p>{{item.username}}</p>
             </div>
             <div class="rank-right">
-              <p>{{item.score}}point</p>
+              <p>{{item.totalPoints}}point</p>
             </div>
           </div>
+          </div>
+
         </div>
 
       </div>
@@ -69,6 +72,7 @@
 
 <script>
 import Fish from './Fish.vue'
+import axios from 'axios'
 export default {
   name: 'HelloWorld',
   components: {
@@ -93,6 +97,7 @@ export default {
   },
   
   mounted() {
+    this.getUserInfo()
     this.resizeUI()
     this.getRankList()
     this.gameOpen()
@@ -114,16 +119,14 @@ export default {
       return ret
     },
     getUserInfo() {
-      if(document.cookie) {
-        let url = "/fishing/v1/user/current"
-        this.$axios.get(url).then(res=>{
-          this.userInfo = res.data.data
-        }).catch(err=>{
-          this.$emit('changeShowLogin', true)
-        })
-      } else {
-         this.$emit('changeShowLogin', true)
-      }
+      let url = "/fishing/v1/user/current/"
+      this.$axios.get(url).then(res=>{
+        this.userInfo = res.data.data
+        this.userScore = res.data.data.seasonTotalPoints
+      }).catch(err=>{
+        // this.getUserInfo()
+        this.$emit('changeShowLogin', true)
+      })
     },
     gameOpen() {
       this.gameStart = true
@@ -164,10 +167,25 @@ export default {
         pageNo: this.pageIndex,
         pageSize:this.pageSize
       }
-      this.$axios.get(url, {
-        params:data
+      axios({
+        method: 'get',
+        url: url,
+        params: data,
+        transformRequest: [
+            function (data) {
+              let ret = ''
+              for (let it in data) {
+                  ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
+              }
+              ret = ret.substring(0, ret.lastIndexOf('&'));
+              return ret
+            }
+          ],
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+          }
       }).then(res=>{
-        this.rankList.push(...res.data.list)
+        this.rankList.push(...res.data.data.list)
         
       })
     },
