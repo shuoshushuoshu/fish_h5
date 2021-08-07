@@ -1,7 +1,10 @@
 <template>
   <div id="app">
+    <img v-if="isMute" @click="showBgm" class="mute_img" src="./assets/icons/mute.png" alt="">
+    <img v-if="!isMute" @click="closeBgm" class="mute_img" src="./assets/icons/hear.png" alt="">
     <Login v-if="showLogin" @changeShowLogin="changeLogin" />
-    <HelloWorld v-else @changeShowLogin="changeLogin" />
+    <HelloWorld :isMute="isMute" v-else @addTouchMove="addTouchMove" @removeTouchMove="removeTouchMove" @changeShowLogin="changeLogin" />
+    <audio id="bgm" ref="bgm" src="./assets/audio/bgm.mp3" muted preload='auto' autoplay="autoplay" loop="loop"></audio>
   </div>
 </template>
 
@@ -16,15 +19,41 @@ export default {
   },
   data() {
     return {
-      showLogin: false
+      showLogin: false,
+      isMute: true
+      // bgmSrc: require('/static/media/coin.mp3'),
     }
   },
   created() {
     this.getUserInfo()
   },
   methods: {
+    closeBgm () {
+      this.isMute = !this.isMute
+      let bgmDom = document.getElementById('bgm')
+      bgmDom.pause()
+    },
+    showBgm() {
+      this.isMute = !this.isMute
+      let bgmDom = document.getElementById('bgm')
+      bgmDom.play()
+    },
+    bgmPlay() {
+      let bgmDom = document.getElementById('bgm')
+        bgmDom.addEventListener("canplaythrough", function(){
+      });
+    },
     changeLogin(show) {
       this.showLogin = show
+    },
+    addTouchMove() {
+      // document.body.addEventListener('touchmove',this.noScroll,false);
+    },
+    // removeTouchMove() {
+    //   document.body.addEventListener('touchmove',this.noScroll,false);
+    // },
+    noScroll(e){
+      e.preventDefault();
     },
     getUserInfo() {
       if(document.cookie) {
@@ -42,6 +71,7 @@ export default {
     },
   },
   mounted() {
+    this.bgmPlay()
     window.onload = function() {
       document.body.addEventListener('touchstart',function (event) {
           if(event.touches.length>1){ 
@@ -66,11 +96,11 @@ export default {
           }  
           lastTouchEnd=now;  
       },false) 
-      document.body.addEventListener('touchmove', function (e) {
-  e.preventDefault(); //阻止默认的处理方式(阻止下拉滑动的效果)
-}, {passive: false});
+      // document.body.addEventListener('touchmove',this.noScroll,false);
+
+      // this.addTouchMove()
     }
-}
+  }
 }
 </script>
 
@@ -90,5 +120,12 @@ export default {
 }
 body {
   margin: 0;
+}
+.mute_img {
+  width: 1rem;
+  height: 1rem;
+  position: absolute;
+  top: .2rem;
+  right: .2rem;
 }
 </style>

@@ -1,6 +1,7 @@
 <template>
   <div id="game">
-     
+    <img v-if="isMute" @click="showBgm" class="mute_img" src="../assets/icons/mute.png" alt="">
+    <img v-if="!isMute" @click="closeBgm" class="mute_img" src="../assets/icons/hear.png" alt="">
     <div id="platform">
       <div id="cannon" :class="cannonType ?  'cannon-' + cannonType : ''">
       </div>
@@ -33,22 +34,22 @@
         <p class="login-bottom">アカウント持っていませんか？新規登録へ</p>
       </div>
       <div class="rank-wrap" v-else-if="toastType === 'showRank'">
-        <div class="close-btn" @click="toastType = ''">
+        <div class="close-btn" @click="closeToast">
           ×
         </div>
-        <div class="rank-list" @scroll="listScroll">
+        <div class="rank-list" id="rank-list" @scroll="listScroll">
           <div class="rank-list-wrap">
-          <div class="rank-item" v-for="(item,index) in rankList" :key="index">
-            <div class="rank-left">
-              <div class="crown-img" v-if="index < 3" :class="index < 3 ? 'crown-' + parseInt(index+1) : ''" alt=""></div>
-              <p v-else class="rank-index">{{index + 1}}</p>
-              <img class="rank-avatar" :src="item.avatar" />
-              <p>{{item.username}}</p>
+            <div class="rank-item" v-for="(item,index) in rankList" :key="index">
+              <div class="rank-left">
+                <div class="crown-img" v-if="index < 3" :class="index < 3 ? 'crown-' + parseInt(index+1) : ''" alt=""></div>
+                <p v-else class="rank-index">{{index + 1}}</p>
+                <img class="rank-avatar" :src="item.avatar" />
+                <p>{{item.username}}</p>
+              </div>
+              <div class="rank-right">
+                <p>{{item.totalPoints}}point</p>
+              </div>
             </div>
-            <div class="rank-right">
-              <p>{{item.totalPoints}}point</p>
-            </div>
-          </div>
           </div>
 
         </div>
@@ -78,6 +79,9 @@ export default {
   components: {
     Fish
   },
+  props: {
+    isMute: true
+  },
   data() {
     return {
       gameStart: false,
@@ -92,11 +96,12 @@ export default {
       pageSize: 10,
       rankList: [],
       warnText:'',
-      userInfo: {}
+      userInfo: {},
     }
   },
   
   mounted() {
+    this.isMute = 
     this.getUserInfo()
     this.resizeUI()
     this.getRankList()
@@ -111,6 +116,23 @@ export default {
     }
   },
   methods: {
+    closeBgm () {
+      this.isMute = !this.isMute
+      let bgmDom = document.getElementById('bgm')
+      bgmDom.pause()
+    },
+    showBgm() {
+      this.isMute = !this.isMute
+      let bgmDom = document.getElementById('bgm')
+      bgmDom.play()
+    },
+    closeToast() {
+      this.toastType = ''
+      // document.body.addEventListener('touchmove', function (e) {
+      //   e.preventDefault(); //阻止默认的处理方式(阻止下拉滑动的效果)
+      // }, {passive: false});
+      // this.$emit('addTouchMove')
+    },
     transformData(data) {
       let ret = ''
       for (let it in data) {
@@ -156,7 +178,7 @@ export default {
       if(this.rankList.length%10 !== 0) return
 
       if(e.currentTarget.scrollTop +  e.currentTarget.clientHeight > (e.currentTarget.scrollHeight -10)) {
-        pageNo += 1
+        this.pageNo += 1
         this.getRankList()
         // console.log('到底了')
       }
@@ -202,6 +224,18 @@ export default {
     },
     showRankList() {
       this.toastType = 'showRank'
+      this.$emit('removeTouchMove')
+      // let scrollDom = document.getElementById('rank-list')
+      // scrollDom.removeEventListener('touchmove', this.callback)
+      // document.body.addEventListener('touchmove', function (e) {
+
+      //   e.returnValue = true;
+
+      // }, false);
+
+    },
+    callback() {
+
     },
     showloading() {
       this.loading = true
@@ -319,9 +353,9 @@ export default {
   background-size: 100% 100%;
 }
 .rank-list {
-  width: 83%;
+  width: 9.46rem;
   overflow: auto;
-  height: 75%;
+  height: 4.56rem;
   position: relative;
   right: .2rem;
 }
@@ -617,6 +651,15 @@ export default {
   justify-content: center;
   align-items: center;
   z-index: 2;
+}
+.mute_img {
+  width: 1rem;
+  height: 1rem;
+  position: absolute;
+  top: .2rem;
+  right: .2rem;
+  z-index: 1;
+  transform: rotate(90deg);
 }
 .add-btn {
   width: .5rem;

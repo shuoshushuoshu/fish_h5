@@ -1,6 +1,8 @@
 <template>
   <div id="fish-wrap" @click.passive="shotClick">
-    
+    <audio id="boom" ref="bgm" src="../assets/audio/coin.mp3" muted preload='auto'></audio>
+    <audio id="coin" ref="bgm" src="../assets/audio/coin.mp3" muted preload='auto'></audio>
+    <audio id="shot" ref="bgm" src="../assets/audio/shot.mp3" muted preload='auto'></audio>
   </div>
 </template>
 
@@ -37,7 +39,20 @@ export default {
     this.clearFishList()
   },
   methods: {
+    boomPlay() {
+      let boomDom = document.getElementById('boom')
+      boomDom.play()
+    },
+    coinPlay() {
+      let coinDom = document.getElementById('coin')
+      coinDom.play()
+    },
+    shotPlay() {
+      let shotDom = document.getElementById('shot')
+      shotDom.play()
+    },
     bulletBoom(x,y) {
+      this.boomPlay()
       // bulletDom.style.
       let platformDom = document.getElementById('game')
       let boomDom = document.createElement('div')
@@ -76,6 +91,7 @@ export default {
     },
 
     fishDead(x, y) {
+      this.coinPlay()
       let wrapDom = document.getElementById('game')
       let deadFishDom = document.createElement('div')
       deadFishDom.className = 'dead-fish fish-'+ this.currentNum
@@ -141,6 +157,7 @@ export default {
 
     gunRotate(e) {
       // debugger
+      this.shotPlay()
       let clickX = e.layerY
       let clickY = e.layerX
       let y = clickY - this.cannonY
@@ -174,7 +191,7 @@ export default {
       this.$emit('changeScore', this.cannonType * -1)
       setTimeout(() => {
         this.hasShot = false 
-      }, 500);
+      }, 100);
       let platformDom = document.getElementById('platform')
       let bulletDom = document.createElement('div')
       let bulletWarpDom = document.createElement('div')
