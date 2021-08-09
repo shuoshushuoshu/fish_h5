@@ -1,8 +1,20 @@
 <template>
   <div id="fish-wrap" @click.passive="shotClick">
-    <audio id="boom" ref="bgm" src="../assets/audio/coin.mp3" muted preload='auto'></audio>
-    <audio id="coin" ref="bgm" src="../assets/audio/coin.mp3" muted preload='auto'></audio>
-    <audio id="shot" ref="bgm" src="../assets/audio/shot.mp3" muted preload='auto'></audio>
+    <audio id="boom_1" ref="bgm" src="../assets/audio/boom.mp3" muted preload='auto'></audio>
+    <audio id="boom_2" ref="bgm" src="../assets/audio/boom.mp3" muted preload='auto'></audio>
+    <audio id="boom_3" ref="bgm" src="../assets/audio/boom.mp3" muted preload='auto'></audio>
+    <audio id="boom_4" ref="bgm" src="../assets/audio/boom.mp3" muted preload='auto'></audio>
+    <audio id="boom_5" ref="bgm" src="../assets/audio/boom.mp3" muted preload='auto'></audio>
+    <audio id="coin_1" ref="bgm" src="../assets/audio/coin.mp3" muted preload='auto'></audio>
+    <audio id="coin_2" ref="bgm" src="../assets/audio/coin.mp3" muted preload='auto'></audio>
+    <audio id="coin_3" ref="bgm" src="../assets/audio/coin.mp3" muted preload='auto'></audio>
+    <audio id="coin_4" ref="bgm" src="../assets/audio/coin.mp3" muted preload='auto'></audio>
+    <audio id="coin_5" ref="bgm" src="../assets/audio/coin.mp3" muted preload='auto'></audio>
+    <audio id="shot_1" ref="bgm" src="../assets/audio/shot.mp3" muted preload='auto'></audio>
+    <audio id="shot_2" ref="bgm" src="../assets/audio/shot.mp3" muted preload='auto'></audio>
+    <audio id="shot_3" ref="bgm" src="../assets/audio/shot.mp3" muted preload='auto'></audio>
+    <audio id="shot_4" ref="bgm" src="../assets/audio/shot.mp3" muted preload='auto'></audio>
+    <audio id="shot_5" ref="bgm" src="../assets/audio/shot.mp3" muted preload='auto'></audio>
   </div>
 </template>
 
@@ -20,7 +32,10 @@ export default {
       fishList: [],
       cannonList: [],
       fishDomlist: [],
-      hasShot:false
+      hasShot:false,
+      shotDomIndex: 1,
+      boomDomIndex: 1,
+      coinDomIndex: 1,
     }
   },
   props: {
@@ -40,15 +55,27 @@ export default {
   },
   methods: {
     boomPlay() {
-      let boomDom = document.getElementById('boom')
+            this.boomDomIndex +=1
+      if(this.boomDomIndex > 5) {
+        this.boomDomIndex = 1
+      }
+      let boomDom = document.getElementById('boom_'+ this.boomDomIndex)
       boomDom.play()
     },
     coinPlay() {
-      let coinDom = document.getElementById('coin')
+      this.coinDomIndex +=1
+      if(this.coinDomIndex > 5) {
+        this.coinDomIndex = 1
+      }
+      let coinDom = document.getElementById('coin_'+ this.coinDomIndex)
       coinDom.play()
     },
     shotPlay() {
-      let shotDom = document.getElementById('shot')
+      this.shotDomIndex +=1
+      if(this.shotDomIndex > 5) {
+        this.shotDomIndex = 1
+      }
+      let shotDom = document.getElementById('shot_'+ this.shotDomIndex)
       shotDom.play()
     },
     bulletBoom(x,y) {
@@ -91,7 +118,6 @@ export default {
     },
 
     fishDead(x, y) {
-      this.coinPlay()
       let wrapDom = document.getElementById('game')
       let deadFishDom = document.createElement('div')
       deadFishDom.className = 'dead-fish fish-'+ this.currentNum
@@ -110,6 +136,7 @@ export default {
 
     addCoin(x, y, fishType) {
       // this.fishDead(x,y)
+      this.coinPlay()
       let wrapDom = document.getElementById('game')
       let coinDom = document.createElement('div')
       coinDom.className = 'coin'
@@ -191,7 +218,7 @@ export default {
       this.$emit('changeScore', this.cannonType * -1)
       setTimeout(() => {
         this.hasShot = false 
-      }, 100);
+      }, 200);
       let platformDom = document.getElementById('platform')
       let bulletDom = document.createElement('div')
       let bulletWarpDom = document.createElement('div')
@@ -417,7 +444,7 @@ export default {
 
       setTimeout(() => {
         this.fishStart()
-      }, 1000);
+      }, 2000);
     },
 
 

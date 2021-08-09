@@ -1,7 +1,7 @@
 <template>
   <div id="game">
-    <img v-if="isMute" @click="showBgm" class="mute_img" src="../assets/icons/mute.png" alt="">
-    <img v-if="!isMute" @click="closeBgm" class="mute_img" src="../assets/icons/hear.png" alt="">
+    <img v-if="isInMute" @click="showBgm" class="mute_img" src="../assets/icons/mute.png" alt="">
+    <img v-if="!isInMute" @click="closeBgm" class="mute_img" src="../assets/icons/hear.png" alt="">
     <div id="platform">
       <div id="cannon" :class="cannonType ?  'cannon-' + cannonType : ''">
       </div>
@@ -97,11 +97,12 @@ export default {
       rankList: [],
       warnText:'',
       userInfo: {},
+      isInMute: false
     }
   },
   
   mounted() {
-    this.isMute = 
+    this.isInMute = this.isMute
     this.getUserInfo()
     this.resizeUI()
     this.getRankList()
@@ -117,12 +118,12 @@ export default {
   },
   methods: {
     closeBgm () {
-      this.isMute = !this.isMute
+      this.isInMute = !this.isInMute
       let bgmDom = document.getElementById('bgm')
       bgmDom.pause()
     },
     showBgm() {
-      this.isMute = !this.isMute
+      this.isInMute = !this.isInMute
       let bgmDom = document.getElementById('bgm')
       bgmDom.play()
     },
@@ -224,7 +225,7 @@ export default {
     },
     showRankList() {
       this.toastType = 'showRank'
-      this.$emit('removeTouchMove')
+      // this.$emit('removeTouchMove')
       // let scrollDom = document.getElementById('rank-list')
       // scrollDom.removeEventListener('touchmove', this.callback)
       // document.body.addEventListener('touchmove', function (e) {
@@ -267,7 +268,7 @@ export default {
 
       var evt = "onorientationchange" in window ? "orientationchange" : "resize";
       window.addEventListener(evt, function() {
-        console.log(evt);
+        // console.log(evt);
         var width = document.documentElement.clientWidth;
         var height =  document.documentElement.clientHeight;
         var con = document.getElementById('game');

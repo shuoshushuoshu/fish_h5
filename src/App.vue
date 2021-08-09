@@ -2,8 +2,8 @@
   <div id="app">
     <img v-if="isMute" @click="showBgm" class="mute_img" src="./assets/icons/mute.png" alt="">
     <img v-if="!isMute" @click="closeBgm" class="mute_img" src="./assets/icons/hear.png" alt="">
-    <Login v-if="showLogin" @changeShowLogin="changeLogin" />
-    <HelloWorld :isMute="isMute" v-else @addTouchMove="addTouchMove" @removeTouchMove="removeTouchMove" @changeShowLogin="changeLogin" />
+    <Login v-if="!showLogin" @changeShowLogin="changeLogin" />
+    <HelloWorld :isMute="isMute" v-else @addTouchMove="addTouchMove" @changeShowLogin="changeLogin" />
     <audio id="bgm" ref="bgm" src="./assets/audio/bgm.mp3" muted preload='auto' autoplay="autoplay" loop="loop"></audio>
   </div>
 </template>
@@ -19,7 +19,7 @@ export default {
   },
   data() {
     return {
-      showLogin: false,
+      showLogin: true,
       isMute: true
       // bgmSrc: require('/static/media/coin.mp3'),
     }
